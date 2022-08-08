@@ -38,6 +38,8 @@
     "egg-mock": "^3.16.0",
     "eslint": "^8.0.0",
     "eslint-config-egg": "^12.0.0",
+    "eslint-config-airbnb-typescript-prettier": "^5.0.0",
+    "prettier": "2.2.1",
     "typescript": "^4.0.0"
   },
   "engines": {
