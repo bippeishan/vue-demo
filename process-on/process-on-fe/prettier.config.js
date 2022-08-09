@@ -1,6 +1,6 @@
 module.exports = {
   extends: 'airbnb-typescript-prettier',
-  // printWidth: 100,
+  printWidth: 300,
   tabWidth: 2,
   useTabs: false,
   semi: true,

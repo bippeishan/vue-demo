@@ -8,6 +8,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@element-plus/icons-vue": "^2.0.6",
     "@svgdotjs/svg.js": "^3.1.2",
     "core-js": "^3.8.3",
     "deepmerge": "^1.5.2",
