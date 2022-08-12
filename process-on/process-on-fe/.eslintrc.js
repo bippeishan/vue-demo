@@ -3,11 +3,7 @@ module.exports = {
   env: {
     node: true,
   },
-  extends: [
-    'plugin:vue/vue3-essential',
-    '@vue/airbnb',
-    '@vue/typescript/recommended',
-  ],
+  extends: ['plugin:vue/vue3-essential', '@vue/airbnb', '@vue/typescript/recommended'],
   parserOptions: {
     ecmaVersion: 2020,
   },
@@ -18,5 +14,6 @@ module.exports = {
     'no-param-reassign': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     'vuejs-accessibility/click-events-have-key-events': 'off',
+    'max-len': 'off',
   },
 };

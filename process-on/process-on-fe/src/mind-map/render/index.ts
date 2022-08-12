@@ -78,7 +78,7 @@ class Render {
   /**
    * 创建节点，并关联数据、节点父子关系、层级
    */
-  createNode(data: DataItem, parent: DataItem | null, isRoot: boolean, layerIndex) {
+  createNode(data: DataItem, parent: DataItem | null, isRoot: boolean) {
     let newNode = null;
     if (data?.node) {
       newNode = data?.node;
@@ -162,8 +162,8 @@ class Render {
     renderUtils.walk(
       this.renderTree,
       null,
-      (cur, parent, isRoot, layerIndex, index) => {
-        const newNode = this.createNode(cur, parent, isRoot, layerIndex);
+      (cur, parent, isRoot) => {
+        const newNode = this.createNode(cur, parent, isRoot);
         if (isRoot) {
           // 根节点定位在画布中心
           this.setNodeCenter(newNode);
@@ -173,13 +173,11 @@ class Render {
         }
         return false;
       },
-      (cur, parent, isRoot, layerIndex, index) => {
+      (cur) => {
         // 返回时计算节点的areaHeight，也就是子节点所占的高度之和，包括外边距
         if (cur.node) {
           const len = cur.node.children.length || 0;
-          cur.node.childrenAreaHeight = len
-            ? cur.node.children.reduce((h, item) => h + item.height, 0) + (len + 1) * nodeMarginY
-            : 0;
+          cur.node.childrenAreaHeight = len ? cur.node.children.reduce((h, item) => h + item.height, 0) + (len + 1) * nodeMarginY : 0;
         }
       },
       true,
@@ -194,7 +192,7 @@ class Render {
     renderUtils.walk(
       this.renderTree,
       null,
-      (crr, parent, isRoot, layerIndex) => {
+      (crr) => {
         const { node } = crr;
         if (node?.children.length) {
           // 第一个子节点的top值 = 该节点中心的top值 - 子节点的高度之和的一半
@@ -223,13 +221,13 @@ class Render {
     renderUtils.walk(
       this.renderTree,
       null,
-      (crr, parent, isRoot, layerIndex) => {
+      (crr) => {
         // eslint-disable-next-line operator-linebreak
-        const difference =
-          (crr.node?.childrenAreaHeight || 0) - nodeMarginY * 2 - (crr.node?.height || 0);
+        const difference = (crr.node?.childrenAreaHeight || 0) - nodeMarginY * 2 - (crr.node?.height || 0);
         if (difference > 0 && crr.node) {
           this.updateBrothers(crr.node, difference / 2);
         }
+        return false;
       },
       null,
       true,

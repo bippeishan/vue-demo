@@ -3,13 +3,18 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    name: 'entryLayout',
     component: () => import(/* webpackChunkName: "entryLayout" */ '../views/entry-layout/index.vue'),
+    children: [
+      {
+        path: 'files',
+        component: () => import(/* webpackChunkName: "fileList" */ '../views/file-list/index.vue'),
+      },
+    ],
   },
   {
     path: '/mindmap',
-    name: 'editMap',
-    component: () => import(/* webpackChunkName: "editMap" */ '../views/edit-map/index.vue'),
+    name: 'mindmap',
+    component: () => import(/* webpackChunkName: "mindmap" */ '../views/mind-map/index.vue'),
   },
 ];
 
