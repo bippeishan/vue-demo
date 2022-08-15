@@ -1,7 +1,5 @@
 import { Application } from 'egg';
 
 export default (app: Application) => {
-  const { controller, router } = app;
-
-  router.get('/files', controller.file.index);
+  app.router.resources('files', '/api/files', 'files');
 };
