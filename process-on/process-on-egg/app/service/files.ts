@@ -2,6 +2,7 @@ import { Service } from 'egg';
 
 export interface ShowParams {
   id?: string;
+  parent_id?: string;
 }
 
 export interface CreateParams {}
@@ -11,8 +12,9 @@ export interface UpdateParams {}
 export interface DeleteParams {}
 
 export default class File extends Service {
-  async list() {
-    const fileInfos = await this.app.mysql.select('files');
+  async list(params: ShowParams) {
+    // console.log('params:', params);
+    const fileInfos = await this.app.mysql.select('files', { where: params });
     console.log('fileInfos:', fileInfos);
     return fileInfos;
   }

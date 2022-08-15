@@ -15,5 +15,14 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 'off',
     'vuejs-accessibility/click-events-have-key-events': 'off',
     'max-len': 'off',
+    camelcase: 'off',
+    'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': [
+      'error',
+      {
+        ignoreRestSiblings: true,
+        argsIgnorePattern: '^_',
+      },
+    ],
   },
 };

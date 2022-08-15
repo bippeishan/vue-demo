@@ -3,7 +3,10 @@ import { Controller } from 'egg';
 export default class FileController extends Controller {
   public async index() {
     const { ctx } = this;
-    ctx.body = await ctx.service.files.list();
+    const { query } = ctx;
+    const { _timestamp, ...otherQuery } = query;
+
+    ctx.body = await ctx.service.files.list(otherQuery);
   }
 
   async show() {

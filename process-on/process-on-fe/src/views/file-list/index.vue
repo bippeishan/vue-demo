@@ -1,21 +1,36 @@
 <template>
   <div class="file-list">
-    <div class="file-item">
+    <div class="file-item" v-for="(it, idx) in fileInfos" v-bind:key="{ idx }" v-on:click="handleFolderClick(it)">
       <el-icon size="12" color="#e4b133"><Folder /></el-icon>
-      <span class="file-item-title">技术学习记录</span>
+      <span class="file-item-title">{{ it.name }}</span>
     </div>
   </div>
 </template>
 
 <script>
+import Api from '../../service/api';
+
 export default {
   name: 'FileList',
   data() {
-    return {};
+    return {
+      fileInfos: [],
+    };
   },
   components: {},
-  // mounted() {},
-  methods: {},
+  mounted() {
+    this.getFiles({ parent_id: '0' });
+  },
+  methods: {
+    async getFiles(params) {
+      const files = await Api.uGet({ Action: 'files', ...params });
+      this.fileInfos = files;
+    },
+    handleFolderClick(info) {
+      console.log('handleFolderClick:', info);
+      this.getFiles({ parent_id: info.id });
+    },
+  },
 };
 </script>
 
