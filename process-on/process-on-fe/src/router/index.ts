@@ -12,7 +12,7 @@ const routes: Array<RouteRecordRaw> = [
     ],
   },
   {
-    path: '/mindmap',
+    path: '/mindmap/:id',
     name: 'mindmap',
     component: () => import(/* webpackChunkName: "mindmap" */ '../views/mind-map/index.vue'),
   },

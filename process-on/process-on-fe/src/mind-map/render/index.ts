@@ -51,14 +51,13 @@ class Render {
     if (this.activeNodeList.length <= 0) {
       return;
     }
-    console.log('this.activeNodeList:', this.activeNodeList[0]?.children.length);
     this.activeNodeList.forEach((node) => {
       if (!node.nodeData.children) {
         node.nodeData.children = [];
       }
       node.nodeData.children.push({
         data: {
-          text: '分支主题',
+          text: '子主题',
           expand: true,
         },
         children: [],

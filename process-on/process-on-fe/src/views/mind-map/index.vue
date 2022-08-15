@@ -9,6 +9,7 @@
 import emitter from './event-bus';
 import MindMap from '../../mind-map';
 import Contextmenu from './components/context-menu/index.vue';
+import Api from '../../service/api';
 
 export default {
   name: 'EditMap',
@@ -16,57 +17,7 @@ export default {
   data() {
     return {
       mindMap: null,
-      rootData: {
-        data: {
-          text: '中心主题',
-        },
-        children: [
-          {
-            data: {
-              text: '二级节点',
-            },
-            children: [
-              {
-                data: {
-                  text: '二级节点-1',
-                },
-              },
-              {
-                data: {
-                  text: '二级节点-2',
-                },
-              },
-              {
-                data: {
-                  text: '二级节点-3',
-                },
-              },
-            ],
-          },
-          {
-            data: {
-              text: '二级节点2',
-            },
-            children: [
-              {
-                data: {
-                  text: '二级节点2-1',
-                },
-              },
-              {
-                data: {
-                  text: '二级节点2-2',
-                },
-              },
-              {
-                data: {
-                  text: '二级节点2-3',
-                },
-              },
-            ],
-          },
-        ],
-      },
+      rootData: {},
     };
   },
   mounted() {
@@ -74,7 +25,11 @@ export default {
     emitter.on('execCommand', this.execCommand);
   },
   methods: {
-    init() {
+    async init() {
+      const rootDataTemp = await this.getRootData();
+      // eslint-disable-next-line prefer-destructuring
+      this.rootData = JSON.parse(rootDataTemp[0].file_content);
+
       this.mindMap = new MindMap({
         el: this.$refs.mindMapContainer,
         rootData: this.rootData,
@@ -86,6 +41,10 @@ export default {
           emitter.emit(event, ...args);
         });
       });
+    },
+    async getRootData() {
+      const mindMapFile = await Api.uGet({ Action: 'files', id: this.$route.params.id });
+      return mindMapFile;
     },
     execCommand(...args) {
       this.mindMap.execCommand(...args);

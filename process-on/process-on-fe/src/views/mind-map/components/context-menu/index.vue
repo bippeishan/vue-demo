@@ -29,7 +29,7 @@ export default {
     emitter.off('node_contextmenu', this.show);
   },
   methods: {
-    show(e, node) {
+    show(e, _node) {
       this.type = 'node';
       this.left = e.clientX + 10;
       this.top = e.clientY + 10;
