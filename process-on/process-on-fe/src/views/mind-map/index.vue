@@ -23,6 +23,11 @@ export default {
   mounted() {
     this.init();
     emitter.on('execCommand', this.execCommand);
+    emitter.on('data_change', this.handleDataChange);
+  },
+  unmounted() {
+    emitter.off('data_change', this.handleDataChange);
+    emitter.off('execCommand', this.execCommand);
   },
   methods: {
     async init() {
@@ -36,7 +41,7 @@ export default {
       });
 
       // 转发事件
-      ['node_contextmenu'].forEach((event) => {
+      ['node_contextmenu', 'data_change'].forEach((event) => {
         this.mindMap.on(event, (...args) => {
           emitter.emit(event, ...args);
         });
@@ -45,6 +50,11 @@ export default {
     async getRootData() {
       const mindMapFile = await Api.uGet({ Action: 'files', id: this.$route.params.id });
       return mindMapFile;
+    },
+    async handleDataChange(data) {
+      console.log('data---:', data);
+      const result = await Api.uPut({ Action: `files/${this.$route.params.id}`, id: this.$route.params.id, file_content: JSON.stringify(data) });
+      console.log('result:', result);
     },
     execCommand(...args) {
       this.mindMap.execCommand(...args);

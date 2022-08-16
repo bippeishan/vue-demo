@@ -21,7 +21,10 @@ export default class FileController extends Controller {
 
   async update() {
     const { ctx } = this;
-    ctx.body = await ctx.service.files.update({});
+    const { query } = ctx;
+    console.log('query:', query);
+    const { file_content, id } = query;
+    ctx.body = await ctx.service.files.update({ file_content, id });
   }
 
   async delete() {

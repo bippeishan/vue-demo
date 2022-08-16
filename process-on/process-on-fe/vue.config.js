@@ -15,6 +15,9 @@ module.exports = defineConfig({
       webSocketTransport: 'ws',
       webSocketURL: 'ws://0.0.0.0:8080/ws',
     },
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+    },
     webSocketServer: 'ws',
     allowedHosts: 'auto',
     hot: true,

@@ -66,6 +66,7 @@ class Render {
         node.initRender = true;
       }
     });
+
     this.doLayout();
   }
 
