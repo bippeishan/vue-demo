@@ -8,7 +8,15 @@
       </el-header>
       <el-container class="entry-layout-content">
         <el-aside width="200px">
-          <el-button type="primary">新建</el-button>
+          <el-dropdown trigger="click" :popper-options="{ showArrow: false }">
+            <el-button type="primary">新建</el-button>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item>文件夹</el-dropdown-item>
+                <el-dropdown-item>思维导图</el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
 
           <div class="menu-content">
             <div class="menu-item menu-item-active">
@@ -77,6 +85,14 @@ export default {
         color: #0984e3;
       }
     }
+  }
+}
+</style>
+
+<style lang="less">
+.el-dropdown__popper {
+  .el-popper__arrow {
+    display: none;
   }
 }
 </style>
