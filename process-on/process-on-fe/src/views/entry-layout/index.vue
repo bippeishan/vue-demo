@@ -8,11 +8,11 @@
       </el-header>
       <el-container class="entry-layout-content">
         <el-aside width="200px">
-          <el-dropdown trigger="click" :popper-options="{ showArrow: false }">
+          <el-dropdown trigger="click">
             <el-button type="primary">新建</el-button>
             <template #dropdown>
               <el-dropdown-menu>
-                <el-dropdown-item>文件夹</el-dropdown-item>
+                <el-dropdown-item v-on:click="handleEditFolder()">文件夹</el-dropdown-item>
                 <el-dropdown-item>思维导图</el-dropdown-item>
               </el-dropdown-menu>
             </template>
@@ -35,13 +35,37 @@
         <el-main><router-view /></el-main>
       </el-container>
     </el-container>
+
+    <el-dialog v-model="editFolderVisible" title="创建文件夹" width="30%">
+      <span>This is a message</span>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button>Cancel</el-button>
+          <el-button type="primary">Confirm</el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
+
+  <!-- <EditFolder :visible="editFolderVisible" /> -->
 </template>
 
 <script>
+// import EditFolder from '../file-list/modal/edit-folder.vue';
+import { ref } from 'vue';
+
 export default {
   name: 'EntryLayout',
-  components: {},
+  setup() {
+    const editFolderVisible = ref(false);
+
+    const handleEditFolder = () => {
+      // this.editFolderVisible = !this.editFolderVisible;
+      editFolderVisible.value = true;
+    };
+
+    return { editFolderVisible, handleEditFolder };
+  },
 };
 </script>
 
