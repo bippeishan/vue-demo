@@ -52,19 +52,30 @@
 
 <script>
 // import EditFolder from '../file-list/modal/edit-folder.vue';
-import { ref } from 'vue';
+// import { ref } from 'vue';
 
 export default {
   name: 'EntryLayout',
-  setup() {
-    const editFolderVisible = ref(false);
+  // setup() {
+  //   const editFolderVisible = ref(false);
 
-    const handleEditFolder = () => {
-      // this.editFolderVisible = !this.editFolderVisible;
-      editFolderVisible.value = true;
+  //   const handleEditFolder = () => {
+  //     // this.editFolderVisible = !this.editFolderVisible;
+  //     editFolderVisible.value = true;
+  //   };
+
+  //   return { editFolderVisible, handleEditFolder };
+  // },
+  data() {
+    return {
+      // editFolderVisible: ref(false),
+      editFolderVisible: false,
     };
-
-    return { editFolderVisible, handleEditFolder };
+  },
+  methods: {
+    handleEditFolder() {
+      this.editFolderVisible = true;
+    },
   },
 };
 </script>
