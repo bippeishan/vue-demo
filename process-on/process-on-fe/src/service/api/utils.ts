@@ -23,12 +23,12 @@ export async function uPost(params: any, options?: UAPIOptions) {
   // eslint-disable-next-line object-curly-newline
   const { timeout = 60000, url = '/api', axiosConfig, isHandleErrorCatch = true } = options || ({} as UAPIOptions);
   params = FormatParams(params);
-  const { Action = '' } = params;
+  const { Action = '', ...otherParams } = params;
 
-  const body = Object.keys(params)
+  const body = Object.keys(otherParams)
     .map((key) => {
-      if (params[key] !== undefined) {
-        return `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`;
+      if (otherParams[key] !== undefined) {
+        return `${encodeURIComponent(key)}=${encodeURIComponent(otherParams[key])}`;
       }
       return undefined;
     })

@@ -16,7 +16,9 @@ export default class FileController extends Controller {
 
   async create() {
     const { ctx } = this;
-    ctx.body = await ctx.service.files.create({});
+    const { name, parent_id, type, file_content } = ctx.request.body;
+
+    ctx.body = await ctx.service.files.create({ name, parent_id, type, file_content });
   }
 
   async update() {

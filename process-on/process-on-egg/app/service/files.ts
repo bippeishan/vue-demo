@@ -5,7 +5,12 @@ export interface ShowParams {
   parent_id?: string;
 }
 
-export interface CreateParams {}
+export interface CreateParams {
+  name: string;
+  parent_id: string;
+  type: string;
+  file_content?: string;
+}
 
 export interface UpdateParams {
   file_content: string;
@@ -27,17 +32,18 @@ export default class File extends Service {
   }
 
   async create(params: CreateParams) {
-    console.log('create:', params);
-    return '';
+    const { name, parent_id, type, file_content } = params;
+
+    const result = await this.app.mysql.insert('files', { name, parent_id, type, file_content });
+    console.log('create-result:', result);
+    return true;
   }
 
   async update(params: UpdateParams) {
     console.log('update:', params);
-    const result = await this.app.mysql.update(
-      'files',
-      { file_content: params.file_content },
-      { where: { id: params.id } },
-    );
+    const { file_content, id } = params;
+
+    const result = await this.app.mysql.update('files', { file_content }, { where: { id } });
     return result.affectedRows === 1;
   }
 

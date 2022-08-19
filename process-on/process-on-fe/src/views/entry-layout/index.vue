@@ -36,39 +36,18 @@
       </el-container>
     </el-container>
 
-    <el-dialog v-model="editFolderVisible" title="创建文件夹" width="30%">
-      <span>This is a message</span>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button>Cancel</el-button>
-          <el-button type="primary">Confirm</el-button>
-        </span>
-      </template>
-    </el-dialog>
+    <EditFolder :visible="editFolderVisible" />
   </div>
-
-  <!-- <EditFolder :visible="editFolderVisible" /> -->
 </template>
 
 <script>
-// import EditFolder from '../file-list/modal/edit-folder.vue';
-// import { ref } from 'vue';
+import EditFolder from '../file-list/modal/edit-folder.vue';
 
 export default {
   name: 'EntryLayout',
-  // setup() {
-  //   const editFolderVisible = ref(false);
-
-  //   const handleEditFolder = () => {
-  //     // this.editFolderVisible = !this.editFolderVisible;
-  //     editFolderVisible.value = true;
-  //   };
-
-  //   return { editFolderVisible, handleEditFolder };
-  // },
+  components: { EditFolder },
   data() {
     return {
-      // editFolderVisible: ref(false),
       editFolderVisible: false,
     };
   },
