@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import emitter from './event-bus';
+import emitter from '../../utils/event-bus';
 import MindMap from '../../mind-map';
 import Contextmenu from './components/context-menu/index.vue';
 import Api from '../../service/api';

@@ -12,7 +12,7 @@
             <el-button type="primary">新建</el-button>
             <template #dropdown>
               <el-dropdown-menu>
-                <el-dropdown-item v-on:click="handleEditFolder()">文件夹</el-dropdown-item>
+                <el-dropdown-item @click="handleEditFolder">文件夹</el-dropdown-item>
                 <el-dropdown-item>思维导图</el-dropdown-item>
               </el-dropdown-menu>
             </template>
@@ -35,25 +35,22 @@
         <el-main><router-view /></el-main>
       </el-container>
     </el-container>
-
-    <EditFolder :visible="editFolderVisible" />
   </div>
 </template>
 
 <script>
-import EditFolder from '../file-list/modal/edit-folder.vue';
+import emitter from '../../utils/event-bus';
 
 export default {
   name: 'EntryLayout',
-  components: { EditFolder },
+  components: {},
   data() {
-    return {
-      editFolderVisible: false,
-    };
+    return {};
   },
+  computed: {},
   methods: {
     handleEditFolder() {
-      this.editFolderVisible = true;
+      emitter.emit('create_folder');
     },
   },
 };

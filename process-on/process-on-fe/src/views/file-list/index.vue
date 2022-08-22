@@ -6,21 +6,32 @@
       <span class="file-item-title">{{ it.name }}</span>
     </div>
   </div>
+
+  <EditFolder v-if="editFolderVisible" :parentId="activeFolderId" @onComplete="handleCreateFolderComplete" />
 </template>
 
 <script>
 import Api from '../../service/api';
+import emitter from '../../utils/event-bus';
+import EditFolder from './modal/edit-folder.vue';
 
 export default {
   name: 'FileList',
   data() {
     return {
       fileInfos: [],
+      editFolderVisible: false,
+      activeFolderId: 0,
     };
   },
-  components: {},
+  components: { EditFolder },
   mounted() {
-    this.getFiles({ parent_id: '0' });
+    emitter.on('create_folder', this.handleCreateFolder);
+
+    this.getFiles({ parent_id: this.activeFolderId });
+  },
+  unmounted() {
+    emitter.off('create_folder', this.handleCreateFolder);
   },
   methods: {
     async getFiles(params) {
@@ -28,11 +39,21 @@ export default {
       this.fileInfos = files;
     },
     handleFolderClick(info) {
-      console.log('handleFolderClick:', info);
       if (info.type === 'folder') {
+        this.activeFolderId = info.id;
+
         this.getFiles({ parent_id: info.id });
       } else {
         this.$router.push(`/${info.type}/${info.id}`);
+      }
+    },
+    handleCreateFolder() {
+      this.editFolderVisible = !this.editFolderVisible;
+    },
+    handleCreateFolderComplete(result) {
+      this.editFolderVisible = !this.editFolderVisible;
+      if (result === 'success') {
+        this.getFiles({ parent_id: this.activeFolderId });
       }
     },
   },

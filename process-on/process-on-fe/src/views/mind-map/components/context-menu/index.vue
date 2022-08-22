@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import emitter from '../../event-bus';
+import emitter from '../../../../utils/event-bus';
 
 export default {
   name: 'ContextMenu',
