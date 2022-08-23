@@ -17,7 +17,9 @@ export interface UpdateParams {
   id: string;
 }
 
-export interface DeleteParams {}
+export interface DeleteParams {
+  id: string;
+}
 
 export default class File extends Service {
   async list(params: ShowParams) {
@@ -40,7 +42,6 @@ export default class File extends Service {
   }
 
   async update(params: UpdateParams) {
-    console.log('update:', params);
     const { file_content, id } = params;
 
     const result = await this.app.mysql.update('files', { file_content }, { where: { id } });
@@ -48,7 +49,10 @@ export default class File extends Service {
   }
 
   async delete(params: DeleteParams) {
-    console.log('delete:', params);
-    return '';
+    const result = await this.app.mysql.delete('files', {
+      id: params.id,
+    });
+    console.log('delete-result:', result);
+    return true;
   }
 }

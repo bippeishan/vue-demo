@@ -136,3 +136,24 @@ export async function uPut(params: any, options?: UAPIOptions) {
 
   return HandleResponse(response);
 }
+
+export async function uDelete(params: any, options?: UAPIOptions) {
+  params = FormatParams(params);
+  const { url = '/api', isHandleErrorCatch = true } = options || ({} as UAPIOptions);
+  params = FormatParams(params);
+  const { Action = '', ...otherParams } = params;
+
+  let response = null;
+  try {
+    response = await axios.delete(`${url}/${Action}`, { params: otherParams, withCredentials: true });
+  } catch (err: any) {
+    if (isHandleErrorCatch) {
+      // -2 为网络超时错误
+      throw new Error('-2');
+    } else {
+      return HandleResponse(err?.response);
+    }
+  }
+
+  return HandleResponse(response);
+}

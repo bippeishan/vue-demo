@@ -4,16 +4,28 @@
       <el-icon size="12" color="#e4b133" v-if="it.type === 'folder'"><Folder /></el-icon>
       <el-icon size="12" color="#00b894" v-if="it.type === 'mindmap'"> <Share /></el-icon>
       <span class="file-item-title">{{ it.name }}</span>
+
+      <el-dropdown>
+        <el-icon size="12"><Operation /></el-icon>
+        <template #dropdown>
+          <el-dropdown-menu>
+            <el-dropdown-item>重命名</el-dropdown-item>
+            <el-dropdown-item @click="handleDeleteFolder(it)">删除</el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
     </div>
   </div>
 
   <EditFolder v-if="editFolderVisible" :parentId="activeFolderId" @onComplete="handleCreateFolderComplete" />
+  <DeleteFile v-if="deleteFileVisible" :fileInfo="editFile" @onComplete="handleDeleteFolder" />
 </template>
 
 <script>
 import Api from '../../service/api';
 import emitter from '../../utils/event-bus';
 import EditFolder from './modal/edit-folder.vue';
+import DeleteFile from './modal/delete-file.vue';
 
 export default {
   name: 'FileList',
@@ -21,10 +33,12 @@ export default {
     return {
       fileInfos: [],
       editFolderVisible: false,
+      deleteFileVisible: false,
       activeFolderId: 0,
+      editFile: {},
     };
   },
-  components: { EditFolder },
+  components: { EditFolder, DeleteFile },
   mounted() {
     emitter.on('create_folder', this.handleCreateFolder);
 
@@ -56,6 +70,16 @@ export default {
         this.getFiles({ parent_id: this.activeFolderId });
       }
     },
+    handleDeleteFolder(result) {
+      if (result !== 'success') {
+        this.editFile = result;
+      }
+      this.deleteFileVisible = !this.deleteFileVisible;
+      if (result === 'success') {
+        this.editFile = {};
+        this.getFiles({ parent_id: this.activeFolderId });
+      }
+    },
   },
 };
 </script>
@@ -83,6 +107,11 @@ export default {
   &-title {
     margin-left: 4px;
     font-size: 12px;
+  }
+
+  .el-dropdown {
+    margin-left: 4px;
+    color: #409eff;
   }
 }
 </style>

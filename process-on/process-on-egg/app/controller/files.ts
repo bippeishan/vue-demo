@@ -27,8 +27,10 @@ export default class FileController extends Controller {
     ctx.body = await ctx.service.files.update({ file_content, id });
   }
 
-  async delete() {
+  async destroy() {
     const { ctx } = this;
-    ctx.body = await ctx.service.files.delete({});
+    const { params } = ctx;
+    const { id } = params;
+    ctx.body = await ctx.service.files.delete({ id });
   }
 }
