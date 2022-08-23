@@ -15,7 +15,7 @@
         <el-icon size="12"><Operation /></el-icon>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item>重命名</el-dropdown-item>
+            <el-dropdown-item @click="handleEditName(it)">重命名</el-dropdown-item>
             <el-dropdown-item @click="handleDeleteFolder(it)">删除</el-dropdown-item>
           </el-dropdown-menu>
         </template>
@@ -25,6 +25,7 @@
 
   <EditFolder v-if="editFolderVisible" :parentId="activeFolderId" @onComplete="handleCreateFolderComplete" />
   <DeleteFile v-if="deleteFileVisible" :fileInfo="editFile" @onComplete="handleDeleteFolder" />
+  <EditName v-if="editNameVisible" :fileInfo="editFile" @onComplete="handleEditName" />
 </template>
 
 <script>
@@ -32,6 +33,7 @@ import Api from '../../service/api';
 import emitter from '../../utils/event-bus';
 import EditFolder from './modal/edit-folder.vue';
 import DeleteFile from './modal/delete-file.vue';
+import EditName from './modal/edit-name.vue';
 
 export default {
   name: 'FileList',
@@ -40,12 +42,13 @@ export default {
       fileInfos: [],
       editFolderVisible: false,
       deleteFileVisible: false,
+      editNameVisible: false,
       activeFolderId: this.getLocalBeradcrumData()?.[this.getLocalBeradcrumData().length - 1]?.toId || 0,
       editFile: {},
       breadcrumbDatas: this.getLocalBeradcrumData(),
     };
   },
-  components: { EditFolder, DeleteFile },
+  components: { EditFolder, DeleteFile, EditName },
   mounted() {
     emitter.on('create_folder', this.handleCreateFolder);
 
@@ -91,6 +94,16 @@ export default {
         this.editFile = result;
       }
       this.deleteFileVisible = !this.deleteFileVisible;
+      if (result === 'success') {
+        this.editFile = {};
+        this.getFiles({ parent_id: this.activeFolderId });
+      }
+    },
+    handleEditName(result) {
+      if (result !== 'success') {
+        this.editFile = result;
+      }
+      this.editNameVisible = !this.editNameVisible;
       if (result === 'success') {
         this.editFile = {};
         this.getFiles({ parent_id: this.activeFolderId });

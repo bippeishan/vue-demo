@@ -15,6 +15,7 @@ export interface CreateParams {
 export interface UpdateParams {
   file_content: string;
   id: string;
+  name: string;
 }
 
 export interface DeleteParams {
@@ -42,9 +43,17 @@ export default class File extends Service {
   }
 
   async update(params: UpdateParams) {
-    const { file_content, id } = params;
+    const { file_content, id, name } = params;
 
-    const result = await this.app.mysql.update('files', { file_content }, { where: { id } });
+    const rows: any = {};
+    if (file_content) {
+      rows.file_content = file_content;
+    }
+    if (name) {
+      rows.name = name;
+    }
+
+    const result = await this.app.mysql.update('files', rows, { where: { id } });
     return result.affectedRows === 1;
   }
 
