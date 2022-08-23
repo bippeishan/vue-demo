@@ -1,6 +1,12 @@
 <template>
+  <el-breadcrumb separator="/">
+    <el-breadcrumb-item v-for="(it, idx) in breadcrumbDatas" v-bind:key="{ idx }" @click="handleBreadcrumClick(it)"
+      ><span class="file-list-creadcrum-name">{{ it.title }}</span></el-breadcrumb-item
+    >
+  </el-breadcrumb>
+
   <div class="file-list">
-    <div class="file-item" v-for="(it, idx) in fileInfos" v-bind:key="{ idx }" v-on:click="handleFolderClick(it)">
+    <div class="file-item" v-for="(it, idx) in fileInfos" v-bind:key="{ idx }" @click="handleFolderClick(it)">
       <el-icon size="12" color="#e4b133" v-if="it.type === 'folder'"><Folder /></el-icon>
       <el-icon size="12" color="#00b894" v-if="it.type === 'mindmap'"> <Share /></el-icon>
       <span class="file-item-title">{{ it.name }}</span>
@@ -34,8 +40,9 @@ export default {
       fileInfos: [],
       editFolderVisible: false,
       deleteFileVisible: false,
-      activeFolderId: 0,
+      activeFolderId: this.getLocalBeradcrumData()?.[this.getLocalBeradcrumData().length - 1]?.toId || 0,
       editFile: {},
+      breadcrumbDatas: this.getLocalBeradcrumData(),
     };
   },
   components: { EditFolder, DeleteFile },
@@ -55,11 +62,20 @@ export default {
     handleFolderClick(info) {
       if (info.type === 'folder') {
         this.activeFolderId = info.id;
+        this.breadcrumbDatas.push({ title: info.name, toId: info.id });
+        this.setLocalBeradcrumData(this.breadcrumbDatas);
 
         this.getFiles({ parent_id: info.id });
       } else {
         this.$router.push(`/${info.type}/${info.id}`);
       }
+    },
+    handleBreadcrumClick(info) {
+      const index = this.breadcrumbDatas.findIndex((it) => it.toId === info.toId);
+      this.breadcrumbDatas.splice(index + 1);
+      this.setLocalBeradcrumData(this.breadcrumbDatas);
+
+      this.getFiles({ parent_id: info.toId });
     },
     handleCreateFolder() {
       this.editFolderVisible = !this.editFolderVisible;
@@ -80,6 +96,12 @@ export default {
         this.getFiles({ parent_id: this.activeFolderId });
       }
     },
+    setLocalBeradcrumData(data) {
+      localStorage.setItem('FILE_BREADCRUM_DATAS', JSON.stringify(data || [{ title: '我的文件', toId: 0 }]));
+    },
+    getLocalBeradcrumData() {
+      return JSON.parse(localStorage.getItem('FILE_BREADCRUM_DATAS')) || [{ title: '我的文件', toId: 0 }];
+    },
   },
 };
 </script>
@@ -87,6 +109,11 @@ export default {
 <style lang="less" scoped>
 .file-list {
   display: flex;
+  margin-top: 24px;
+}
+
+.file-list-creadcrum-name {
+  cursor: pointer;
 }
 
 .file-item {
