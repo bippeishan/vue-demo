@@ -38,21 +38,11 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import emitter from '../../utils/event-bus';
 
-export default {
-  name: 'EntryLayout',
-  components: {},
-  data() {
-    return {};
-  },
-  computed: {},
-  methods: {
-    handleEditFolder() {
-      emitter.emit('create_folder');
-    },
-  },
+const handleEditFolder = () => {
+  emitter.emit('create_folder');
 };
 </script>
 
