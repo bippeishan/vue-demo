@@ -27,21 +27,30 @@ class Event extends EventEmitter {
   }
 
   bindFn() {
+    this.onDrawClick = this.onDrawClick.bind(this);
     this.handleMouseDown = this.handleMouseDown.bind(this);
     this.handleMousemove = this.handleMousemove.bind(this);
     this.handleMouseup = this.handleMouseup.bind(this);
   }
 
   bind() {
+    this.mindMap.svg.on('click', this.onDrawClick);
     this.mindMap.el.addEventListener('mousedown', this.handleMouseDown);
     window.addEventListener('mousemove', this.handleMousemove);
     window.addEventListener('mouseup', this.handleMouseup);
   }
 
   unbind() {
+    this.mindMap.svg.off('click', this.onDrawClick);
     this.mindMap.el.removeEventListener('mousedown', this.handleMouseDown);
     window.removeEventListener('mousemove', this.handleMousemove);
     window.removeEventListener('mouseup', this.handleMouseup);
+  }
+
+  // 画布的单击事件
+  onDrawClick(e: any) {
+    // console.log('画布的单击事件');
+    this.emit('draw_click', e);
   }
 
   handleMouseDown(e: MouseEvent) {

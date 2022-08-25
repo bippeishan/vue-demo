@@ -29,6 +29,7 @@ const cubicBezierPath = (x1: number, y1: number, x2: number, y2: number) => {
 };
 
 const setNodeData = (node: Node, data: any) => {
+  // console.log('setNodeData:', data);
   Object.keys(data).forEach((key) => {
     node.nodeData.data[key] = data[key];
   });

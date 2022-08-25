@@ -1,12 +1,12 @@
 import { Path, Rect, Text } from '@svgdotjs/svg.js';
 
-const rect = (node: Rect) => {
+const rect = (node: Rect, style?: { fillColor?: string; strokeColor?: string }) => {
   node
     .fill({
-      color: '#fff7e6',
+      color: style?.fillColor || '#ffffff',
     })
     .stroke({
-      color: '#1f1f1f',
+      color: style?.strokeColor || '#0984e3',
       width: 1,
       dasharray: '0, 0',
     })
@@ -16,11 +16,10 @@ const rect = (node: Rect) => {
 const text = (node: Text) => {
   node
     .fill({
-      color: '#faad14',
+      color: '#ffffff',
     })
     .font({
-      'font-family':
-        '-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,apple color emoji,segoe ui emoji,Segoe UI Symbol,noto color emoji',
+      'font-family': '-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,apple color emoji,segoe ui emoji,Segoe UI Symbol,noto color emoji',
       'font-size': 12,
       'line-height': 14,
       'font-weight': 'noraml',

@@ -23,9 +23,29 @@ class Render {
     this.renderTree = merge({}, this.mindMap.opt.rootData || {});
     this.activeNodeList = [];
 
+    this.bindFn();
     this.doLayout();
     // 注册命令
     this.registerCommands();
+    this.bindEvent();
+  }
+
+  handleDrawClick() {
+    // console.log('画布的单击事件22:', this.activeNodeList);
+    // 清除激活状态
+    if (this.activeNodeList.length > 0) {
+      this.clearActive();
+      this.mindMap.emit('clear_active_node');
+    }
+  }
+
+  bindFn() {
+    this.handleDrawClick = this.handleDrawClick.bind(this);
+  }
+
+  bindEvent() {
+    // 点击事件
+    this.mindMap.on('draw_click', this.handleDrawClick);
   }
 
   findActiveNodeIndex(node: Node) {
@@ -34,6 +54,7 @@ class Render {
 
   addActiveNode(node: Node) {
     const index = this.findActiveNodeIndex(node);
+    // console.log('addActiveNode:', index, node);
     if (index === -1) {
       this.activeNodeList.push(node);
     }
@@ -41,13 +62,15 @@ class Render {
 
   clearActive() {
     this.activeNodeList.forEach((item) => {
-      nodeUtils.setNodeData(item, false);
+      nodeUtils.setNodeData(item, { isActive: false });
+      item.renderNode();
     });
     this.activeNodeList = [];
   }
 
   // 插入子节点
   insertChildNode() {
+    // console.log('插入子节点:', this.activeNodeList);
     if (this.activeNodeList.length <= 0) {
       return;
     }

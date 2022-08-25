@@ -7,6 +7,7 @@ import MindMap from '..';
 
 // 矩形节点的边距
 const nodePadding = 8;
+const contentPadding = 4;
 
 class Node {
   mindMap: MindMap;
@@ -56,12 +57,29 @@ class Node {
     this.childrenAreaHeight = 0;
     this.lines = [];
 
+    this.bindFn();
     this.createNodeData();
     this.getSize();
+
+    // console.log('this.nodeData:', this.nodeData);
+  }
+
+  handleContextMenu(e: any) {
+    // console.log('node-contextmenu');
+    e.stopPropagation();
+    e.preventDefault();
+
+    this.active(e);
+    this.mindMap.emit('node_contextmenu', e, this);
+  }
+
+  bindFn() {
+    this.handleContextMenu = this.handleContextMenu.bind(this);
   }
 
   active(e: Event) {
     e.stopPropagation();
+    // console.log('active-1:', this.nodeData, this.nodeData.data.isActive);
     if (this.nodeData.data.isActive) {
       return;
     }
@@ -73,6 +91,8 @@ class Node {
     // this.mindMap.renderer.clearActive();
     // this.mindMap.execCommand('SET_NODE_ACTIVE', this, true);
     this.mindMap.renderer.addActiveNode(this);
+
+    this.renderNode();
     // this.mindMap.emit('node_active', this, this.mindMap.renderer.activeNodeList);
   }
 
@@ -106,10 +126,39 @@ class Node {
     this.textData = this.createTextNode();
   }
 
+  // 解绑所有绑定事件
+  removeAllEvent() {
+    if (this.group) {
+      this.group.off('contextmenu', this.handleContextMenu);
+    }
+  }
+
+  // 移除所有节点
+  removeAllNode() {
+    // 节点内的内容
+    [this.textData].forEach((item) => {
+      if (item && item.node) item.node.remove();
+    });
+
+    this.textData = null;
+
+    // 展开收缩按钮
+    // if (this._expandBtn) {
+    //   this._expandBtn.remove();
+    //   this._expandBtn = null;
+    // }
+    // 组
+    if (this.group) {
+      this.group.clear();
+      this.group.remove();
+      this.group = undefined;
+    }
+  }
+
   getSize() {
     // TODO: 可以扩展图片、链接、标注等节点类型
-    let totalWidth = nodePadding * 2;
-    let totalHeight = nodePadding * 2;
+    let totalWidth = nodePadding * 2 + contentPadding * 2;
+    let totalHeight = nodePadding * 2 + contentPadding * 2;
 
     if (this.textData) {
       totalWidth += this.textData.width;
@@ -124,38 +173,42 @@ class Node {
     this.children.push(node);
   }
 
-  renderNode() {
+  // 定位节点内容
+  layout() {
     this.group = new G();
     this.draw.add(this.group);
 
-    styleUtils.rect(this.group.rect(this.width, this.height));
+    // console.log('99:', this.nodeData);
+    const isActive = !!this.nodeData.data.isActive;
+
+    styleUtils.rect(this.group.rect(this.width, this.height), { strokeColor: isActive ? '' : '#ffffff' });
     // 根节点在页面居中
     this.group.translate(this.left, this.top);
-    // 内容节点
+    // 文字节点
     const textContentNested = new G();
+    styleUtils.rect(textContentNested.rect(this.width - contentPadding * 2, this.height - contentPadding * 2), { fillColor: '#6c5ce7' });
 
     if (this.textData) {
       // 有文字节点
       textContentNested.add(this.textData.node);
+      this.textData.node.translate(
+        nodePadding,
+        // group加textContentNested后的高度被折叠了，所以这样处理垂直居中
+        // textContentNested.bbox().height - this.height + nodePadding,
+        textContentNested.bbox().height / 2 - 2,
+      );
     }
     // TODO: 可以扩展图片、链接、标注等节点类型
     this.group.add(textContentNested);
     // 混合节点在矩形框中水平、垂直居中
     textContentNested.translate(
-      nodePadding,
+      contentPadding,
       // group加textContentNested后的高度被折叠了，所以这样处理垂直居中
-      this.group.bbox().height - this.height + nodePadding,
+      this.group.bbox().height - this.height + contentPadding,
     );
 
     // 增加事件监听
-    this.group.on('contextmenu', (e) => {
-      console.log('node-contextmenu');
-      e.stopPropagation();
-      e.preventDefault();
-
-      this.active(e);
-      this.mindMap.emit('node_contextmenu', e, this);
-    });
+    this.group.on('contextmenu', this.handleContextMenu);
   }
 
   // 连线
@@ -226,7 +279,7 @@ class Node {
 
     if (this.initRender) {
       this.initRender = false;
-      this.renderNode();
+      this.layout();
     } else {
       this.update();
     }
@@ -239,6 +292,14 @@ class Node {
         }),
       );
     }
+  }
+
+  // 渲染节点到画布，会移除旧的，创建新的
+  renderNode() {
+    this.removeAllEvent();
+    this.removeAllNode();
+    this.createNodeData();
+    this.layout();
   }
 }
 

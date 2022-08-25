@@ -27,20 +27,22 @@ const show = (e: any, _node: any) => {
   isShow.value = true;
 };
 
-onMounted(() => {
-  emitter.on('node_contextmenu', show);
-});
-
-onBeforeMount(() => {
-  emitter.off('node_contextmenu', show);
-});
-
 const hide = () => {
   isShow.value = false;
   left.value = 0;
   top.value = 0;
   type.value = '';
 };
+
+onMounted(() => {
+  emitter.on('node_contextmenu', show);
+  emitter.on('clear_active_node', hide);
+});
+
+onBeforeMount(() => {
+  emitter.off('node_contextmenu', show);
+  emitter.on('clear_active_node', hide);
+});
 
 const exec = (key: any, disabled?: any) => {
   if (disabled) {
