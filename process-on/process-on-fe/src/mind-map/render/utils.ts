@@ -1,3 +1,4 @@
+import Node from '../node';
 import { DataItem } from '../node/type';
 
 /**
@@ -8,22 +9,8 @@ import { DataItem } from '../node/type';
 const walk = (
   root: DataItem,
   parent: DataItem | null,
-  beforeCallback: (
-    cur: DataItem,
-    beforeParent: DataItem | null,
-    isRoot: boolean,
-    layerIndex: number,
-    index: number,
-  ) => boolean,
-  afterCallback:
-    | ((
-        cur: DataItem,
-        beforeParent: DataItem | null,
-        isRoot: boolean,
-        layerIndex: number,
-        index: number,
-      ) => void)
-    | null,
+  beforeCallback: (cur: DataItem, beforeParent: DataItem | null, isRoot: boolean, layerIndex: number, index: number) => boolean,
+  afterCallback: ((cur: DataItem, beforeParent: DataItem | null, isRoot: boolean, layerIndex: number, index: number) => void) | null,
   isRoot: boolean,
   layerIndex = 0,
   index = 0,
@@ -63,7 +50,20 @@ const asyncRun = (taskList: Array<() => any>, callback?: () => void) => {
   loop();
 };
 
+// 获取节点在同级里的索引位置
+const getNodeIndex = (node: Node) => (node.parent ? node.parent.children.findIndex((item) => item === node) : 0);
+
+// 移除某个指定节点
+const removeOneNode = (node: Node) => {
+  const index = getNodeIndex(node);
+  node.remove();
+  node.parent?.children.splice(index, 1);
+  node.parent?.nodeData.children.splice(index, 1);
+};
+
 export default {
   walk,
   asyncRun,
+  getNodeIndex,
+  removeOneNode,
 };

@@ -18,15 +18,19 @@ class Render {
 
   activeNodeList: Node[];
 
+  reRender: boolean;
+
   constructor(opt: Opt) {
     this.mindMap = opt.mindMap;
     this.renderTree = merge({}, this.mindMap.opt.rootData || {});
     this.activeNodeList = [];
+    this.reRender = false;
 
     this.bindFn();
     this.doLayout();
     // 注册命令
     this.registerCommands();
+    this.registerShortcutKeys();
     this.bindEvent();
   }
 
@@ -90,12 +94,47 @@ class Render {
       }
     });
 
-    this.doLayout();
+    this.reRender = false;
+    this.render();
+  }
+
+  // 移除节点
+  removeNode() {
+    if (this.activeNodeList.length <= 0) {
+      return;
+    }
+    for (let i = 0; i < this.activeNodeList.length; i += 1) {
+      const node = this.activeNodeList[i];
+      if (node.isRoot) {
+        node.children.forEach((child) => {
+          child.remove();
+        });
+        node.children = [];
+        node.nodeData.children = [];
+        break;
+      } else {
+        this.removeActiveNode(node);
+        renderUtils.removeOneNode(node);
+        i -= 1;
+      }
+    }
+    this.mindMap.emit('node_active', null, []);
+    this.mindMap.render();
+  }
+
+  removeNodeWrap() {
+    this.mindMap.execCommand('REMOVE_NODE');
   }
 
   // 注册命令
   registerCommands() {
     this.mindMap.command.add('INSERT_CHILD_NODE', this.insertChildNode.bind(this));
+    this.mindMap.command.add('REMOVE_NODE', this.removeNode.bind(this));
+  }
+
+  // 注册快捷键
+  registerShortcutKeys() {
+    this.mindMap.keyCommand.addShortcut('Del|Backspace', this.removeNodeWrap.bind(this));
   }
 
   /**
@@ -103,7 +142,7 @@ class Render {
    */
   createNode(data: DataItem, parent: DataItem | null, isRoot: boolean) {
     let newNode = null;
-    if (data?.node) {
+    if (data?.node && !this.reRender) {
       newNode = data?.node;
       newNode.reset();
     } else {
@@ -223,9 +262,6 @@ class Render {
           let totalTop = top + nodeMarginY;
 
           node.children.forEach((cur) => {
-            if (cur.nodeData.data.text === '二级节点-1') {
-              console.log('99:', totalTop);
-            }
             cur.top = totalTop;
             totalTop += cur.height + nodeMarginY;
           });
@@ -276,6 +312,22 @@ class Render {
       },
     ];
     renderUtils.asyncRun(task);
+  }
+
+  // 在激活列表里移除某个节点
+  removeActiveNode(node: Node) {
+    const index = this.findActiveNodeIndex(node);
+    if (index === -1) {
+      return;
+    }
+    this.activeNodeList.splice(index, 1);
+  }
+
+  render() {
+    if (this.reRender) {
+      this.clearActive();
+    }
+    this.doLayout();
   }
 }
 

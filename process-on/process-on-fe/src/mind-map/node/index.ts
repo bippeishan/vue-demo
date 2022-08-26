@@ -73,8 +73,14 @@ class Node {
     this.mindMap.emit('node_contextmenu', e, this);
   }
 
+  handleClick(e: any) {
+    this.active(e);
+    this.mindMap.emit('node_click', e, this);
+  }
+
   bindFn() {
     this.handleContextMenu = this.handleContextMenu.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
 
   active(e: Event) {
@@ -130,6 +136,7 @@ class Node {
   removeAllEvent() {
     if (this.group) {
       this.group.off('contextmenu', this.handleContextMenu);
+      this.group.off('click', this.handleClick);
     }
   }
 
@@ -156,6 +163,9 @@ class Node {
   }
 
   getSize() {
+    this.removeAllNode();
+    this.createNodeData();
+
     // TODO: 可以扩展图片、链接、标注等节点类型
     let totalWidth = nodePadding * 2 + contentPadding * 2;
     let totalHeight = nodePadding * 2 + contentPadding * 2;
@@ -186,11 +196,13 @@ class Node {
     this.group.translate(this.left, this.top);
     // 文字节点
     const textContentNested = new G();
+    // console.log('11:', this.width, this.height, this.width - contentPadding * 2, this.height - contentPadding * 2);
     styleUtils.rect(textContentNested.rect(this.width - contentPadding * 2, this.height - contentPadding * 2), { fillColor: '#6c5ce7' });
 
     if (this.textData) {
       // 有文字节点
       textContentNested.add(this.textData.node);
+      // console.log('22:', textContentNested.bbox().height, textContentNested.bbox().width);
       this.textData.node.translate(
         nodePadding,
         // group加textContentNested后的高度被折叠了，所以这样处理垂直居中
@@ -200,6 +212,7 @@ class Node {
     }
     // TODO: 可以扩展图片、链接、标注等节点类型
     this.group.add(textContentNested);
+    // console.log('33:', this.group.bbox().height, this.group.bbox().width);
     // 混合节点在矩形框中水平、垂直居中
     textContentNested.translate(
       contentPadding,
@@ -209,6 +222,7 @@ class Node {
 
     // 增加事件监听
     this.group.on('contextmenu', this.handleContextMenu);
+    this.group.on('click', this.handleClick);
   }
 
   // 连线
@@ -249,6 +263,13 @@ class Node {
     });
   }
 
+  removeLine() {
+    this.lines.forEach((line) => {
+      line.remove();
+    });
+    this.lines = [];
+  }
+
   update(layout = false) {
     if (!this.group) {
       return;
@@ -277,9 +298,10 @@ class Node {
     // 连线
     this.renderLine();
 
+    // console.log('this.initRender:', this.initRender);
     if (this.initRender) {
       this.initRender = false;
-      this.layout();
+      this.renderNode();
     } else {
       this.update();
     }
@@ -300,6 +322,22 @@ class Node {
     this.removeAllNode();
     this.createNodeData();
     this.layout();
+  }
+
+  // 递归移除
+  remove() {
+    this.initRender = true;
+    this.removeAllEvent();
+    this.removeAllNode();
+    this.removeLine();
+    // 子节点
+    if (this.children && this.children.length) {
+      renderUtils.asyncRun(
+        this.children.map((item) => () => {
+          item.remove();
+        }),
+      );
+    }
   }
 }
 

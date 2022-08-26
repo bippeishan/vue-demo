@@ -5,6 +5,7 @@ import Render from './render';
 import View from './view';
 
 import { Opt } from './type';
+import KeyCommand from './key-command';
 
 const defaultOpt = {};
 
@@ -23,6 +24,8 @@ class MindMap {
 
   event: Event;
 
+  keyCommand: KeyCommand;
+
   command: Command;
 
   view: View;
@@ -38,6 +41,11 @@ class MindMap {
     this.command = new Command({
       mindMap: this,
     });
+    // 按键类
+    this.keyCommand = new KeyCommand({
+      mindMap: this,
+    });
+
     this.event = new Event({ mindMap: this });
     this.renderer = new Render({ mindMap: this });
     // 视图操作类
@@ -60,6 +68,11 @@ class MindMap {
 
   execCommand(...args: any) {
     this.command.exec(args[0], ...args.slice(1));
+  }
+
+  render() {
+    this.renderer.reRender = false;
+    this.renderer.render();
   }
 }
 
