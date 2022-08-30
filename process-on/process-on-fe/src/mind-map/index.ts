@@ -6,6 +6,7 @@ import View from './view';
 
 import { Opt } from './type';
 import KeyCommand from './key-command';
+import Drag from './drag';
 
 const defaultOpt = {};
 
@@ -30,6 +31,8 @@ class MindMap {
 
   view: View;
 
+  drag: Drag;
+
   constructor(opt = {} as Opt) {
     this.opt = { ...defaultOpt, ...opt };
     this.el = this.opt.el;
@@ -50,6 +53,11 @@ class MindMap {
     this.renderer = new Render({ mindMap: this });
     // 视图操作类
     this.view = new View({
+      mindMap: this,
+    });
+
+    // 拖动类
+    this.drag = new Drag({
       mindMap: this,
     });
   }

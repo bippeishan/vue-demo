@@ -78,9 +78,21 @@ class Node {
     this.mindMap.emit('node_click', e, this);
   }
 
+  handleNodeMousedown(e: any) {
+    e.stopPropagation();
+    this.mindMap.emit('node_mousedown', this, e);
+  }
+
+  handleNodeMouseup(e: any) {
+    e.stopPropagation();
+    this.mindMap.emit('node_mouseup', this, e);
+  }
+
   bindFn() {
     this.handleContextMenu = this.handleContextMenu.bind(this);
     this.handleClick = this.handleClick.bind(this);
+    this.handleNodeMousedown = this.handleNodeMousedown.bind(this);
+    this.handleNodeMouseup = this.handleNodeMouseup.bind(this);
   }
 
   active(e: Event) {
@@ -221,8 +233,10 @@ class Node {
     );
 
     // 增加事件监听
-    this.group.on('contextmenu', this.handleContextMenu);
     this.group.on('click', this.handleClick);
+    this.group.on('mousedown', this.handleNodeMousedown);
+    this.group.on('mouseup', this.handleNodeMouseup);
+    this.group.on('contextmenu', this.handleContextMenu);
   }
 
   // 连线

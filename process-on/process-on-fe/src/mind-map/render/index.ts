@@ -35,7 +35,7 @@ class Render {
   }
 
   handleDrawClick() {
-    // console.log('画布的单击事件22:', this.activeNodeList);
+    console.log('画布的单击事件22:', this.activeNodeList);
     // 清除激活状态
     if (this.activeNodeList.length > 0) {
       this.clearActive();
@@ -95,6 +95,7 @@ class Render {
     });
 
     this.reRender = false;
+    this.clearActive();
     this.render();
   }
 
