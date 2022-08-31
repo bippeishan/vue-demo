@@ -42,6 +42,8 @@ class Node {
 
   lines: Path[];
 
+  isDrag: boolean;
+
   constructor(opt = {} as Opt) {
     this.mindMap = opt.mindMap;
     this.nodeData = utils.handleData(opt.data);
@@ -56,6 +58,8 @@ class Node {
     this.initRender = true;
     this.childrenAreaHeight = 0;
     this.lines = [];
+    // 是否在拖拽中
+    this.isDrag = false;
 
     this.bindFn();
     this.createNodeData();
