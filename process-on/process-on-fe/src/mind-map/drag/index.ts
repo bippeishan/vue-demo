@@ -1,4 +1,5 @@
 import { G } from '@svgdotjs/svg.js';
+import { throttle } from 'lodash';
 import MindMap from '..';
 import { Opt } from './type';
 import Node from '../node';
@@ -39,12 +40,19 @@ class Drag {
       this.clone?.opacity(0.5);
       this.clone?.css('zIndex', '99999');
       this.node.isDrag = true;
+
+      if (this.clone) {
+        this.mindMap.draw.add(this.clone);
+      }
     }
   }
 
+  // 检测重叠节点
+  checkOverlapNode() {
+    console.log('检测重叠节点:', this.clone);
+  }
+
   handleNodeMousedown(node: Node, e: any) {
-    console.log('handleNodeMousedown-1:', e.which);
-    console.log('handleNodeMousedown:', e, this.mindMap);
     if (e.which !== 1 || node.isRoot) {
       return;
     }
@@ -57,7 +65,7 @@ class Drag {
   }
 
   handleMousemove(e: any) {
-    console.log('handleMousemove:', e, this.mindMap);
+    // console.log('handleMousemove:', e, this.mindMap);
     if (!this.isMousedown) {
       return;
     }
@@ -73,10 +81,18 @@ class Drag {
 
     // 创建克隆节点，跟随鼠标移动
     this.createCloneNode();
+
+    // console.log('this.clone:', this.clone);
+    if (this.clone) {
+      const t = this.clone.transform();
+      // console.log('22:', e.clientX - (t.translateX || 0), e.clientY - (t.translateY || 0));
+      this.clone.translate(e.clientX - (t.translateX || 0), e.clientY - (t.translateY || 0));
+      this.checkOverlapNode();
+    }
   }
 
-  handleNodeMouseup(e: any) {
-    console.log('handleNodeMouseup:', e, this.mindMap);
+  handleNodeMouseup(_e: any) {
+    // console.log('handleNodeMouseup:', e, this.mindMap);
     if (!this.isMousedown) {
       return;
     }
@@ -86,6 +102,7 @@ class Drag {
   }
 
   bindFn() {
+    this.checkOverlapNode = throttle(this.checkOverlapNode, 300);
     this.handleNodeMousedown = this.handleNodeMousedown.bind(this);
     this.handleMousemove = this.handleMousemove.bind(this);
     this.handleNodeMouseup = this.handleNodeMouseup.bind(this);

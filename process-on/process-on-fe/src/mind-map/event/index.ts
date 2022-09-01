@@ -68,7 +68,7 @@ class Event extends EventEmitter {
     this.mousemovePos.y = e.clientY;
     this.mousemoveOffset.x = e.clientX - this.mousedownPos.x;
     this.mousemoveOffset.y = e.clientY - this.mousedownPos.y;
-    // this.emit('mousemove', e, this)
+    this.emit('mousemove', e, this);
 
     if (this.isLeftMousedown) {
       this.emit('drag', e, this);
