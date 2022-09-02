@@ -61,9 +61,32 @@ const removeOneNode = (node: Node) => {
   node.parent?.nodeData.children.splice(index, 1);
 };
 
+// 广度优先遍历树
+const bfsWalk = (root?: Node, callback?: (val?: Node) => string) => {
+  callback?.(root);
+  const stack = [root];
+  let isStop = false;
+  while (stack.length) {
+    if (isStop) {
+      break;
+    }
+    const cur = stack.shift();
+    if (cur?.children && cur.children.length) {
+      for (let i = 0; i < cur.children.length; i += 1) {
+        stack.push(cur.children[i]);
+        if (callback?.(cur.children[i]) === 'stop') {
+          isStop = true;
+          break;
+        }
+      }
+    }
+  }
+};
+
 export default {
   walk,
   asyncRun,
   getNodeIndex,
   removeOneNode,
+  bfsWalk,
 };
