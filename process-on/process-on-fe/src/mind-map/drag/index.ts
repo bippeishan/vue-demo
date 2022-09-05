@@ -4,6 +4,7 @@ import MindMap from '..';
 import { Opt } from './type';
 import Node from '../node';
 import renderUtils from '../render/utils';
+import styleUtils from '../style/utils';
 
 // 检查是否前后加节点的额外距离
 // const extraHeight = 20;
@@ -35,6 +36,9 @@ class Drag {
 
   // 重叠节点
   overlapNode?: Node;
+
+  // 移动节点的指示位置
+  VirtualChildGroup?: G;
 
   constructor(opt: Opt) {
     this.mindMap = opt.mindMap;
@@ -70,18 +74,42 @@ class Drag {
     }
   }
 
+  /**
+   * 添加虚拟子节点
+   * 1. 创建和overlapNode同样宽高、位置的橙色矩形
+   * 2. 创建橙色矩形的子节点，橙色矩形
+   * 3. 连线
+   */
+  addVirtualChild() {
+    console.log('this.overlapNode:', this.overlapNode);
+    /**
+     * 位置不变就不用新建group
+     * 位置变了要删除旧的再建新的
+     */
+    if (this.overlapNode) {
+      this.VirtualChildGroup = new G();
+      this.mindMap.draw.add(this.VirtualChildGroup);
+      // console.log('99:', this.overlapNode?.width, this.overlapNode?.height);
+      styleUtils.rect(this.VirtualChildGroup.rect(this.overlapNode.width, this.overlapNode.height), { strokeColor: '#e67e22' });
+    }
+  }
+
   // 检测重叠节点
   checkOverlapNode() {
     console.log('检测重叠节点:', this.clone);
-    const checkRight = this.cloneNodeLeft + (this.node?.width || 0);
-    const checkBottom = this.cloneNodeTop + (this.node?.height || 0);
+    // const checkRight = this.cloneNodeLeft + (this.node?.width || 0);
+    // const checkBottom = this.cloneNodeTop + (this.node?.height || 0);
 
     this.overlapNode = undefined;
 
     renderUtils.bfsWalk(this.mindMap.renderer.root, (node) => {
-      console.log('99:', node);
+      // console.log('99:', node);
 
       if (node === this.node) {
+        return '';
+      }
+
+      if (this.overlapNode) {
         return '';
       }
 
@@ -109,8 +137,13 @@ class Drag {
          * 4. top + extraHeight <= this.cloneNodeTop + 1/2 this.clone.height
          * 节点后加节点: 和节点前加节点类似
          */
-        if (left <= checkRight && right >= this.cloneNodeLeft && top <= checkBottom && bottom >= this.cloneNodeTop) {
+        // if (left <= checkRight && right >= this.cloneNodeLeft && top <= checkBottom && bottom >= this.cloneNodeTop) {
+        //   this.overlapNode = node;
+        // }
+        if (left + width / 2 >= this.cloneNodeLeft && left + width / 2 <= right && top <= this.cloneNodeTop + height / 2 && bottom >= this.cloneNodeTop + height / 2) {
+          console.log('加到子节点');
           this.overlapNode = node;
+          this.addVirtualChild();
         }
       }
 
