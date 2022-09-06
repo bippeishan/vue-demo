@@ -28,8 +28,8 @@ const text = (node: Text) => {
     });
 };
 
-const line = (node: Path) => {
-  node.stroke({ width: 1, color: '#ccc' }).fill('transparent');
+const line = (node: Path, style?: { color?: string }) => {
+  node.stroke({ width: 1, color: style?.color || '#ccc' }).fill('transparent');
 };
 
 export default {
