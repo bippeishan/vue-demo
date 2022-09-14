@@ -216,14 +216,31 @@ class Drag {
     }
   }
 
+  // 删除克隆节点
+  removeCloneNode() {
+    if (!this.clone) {
+      return;
+    }
+    this.clone.remove();
+  }
+
   handleNodeMouseup(_e: any) {
     // console.log('handleNodeMouseup:', e, this.mindMap);
     if (!this.isMousedown) {
       return;
     }
     this.isMousedown = false;
+    if (this.node) {
+      this.node.isDrag = false;
+    }
 
     // 删除克隆节点
+    this.removeCloneNode();
+    this.removeVirtualChild();
+    if (this.node && this.overlapNode) {
+      // 移动节点作为子节点
+      this.mindMap.execCommand('MOVE_NODE_TO', this.node, this.overlapNode);
+    }
   }
 
   bindFn() {
@@ -237,6 +254,7 @@ class Drag {
     this.mindMap.on('node_mousedown', this.handleNodeMousedown);
     this.mindMap.on('mousemove', this.handleMousemove);
     this.mindMap.on('node_mouseup', this.handleNodeMouseup);
+    this.mindMap.on('mouseup', this.handleNodeMouseup);
   }
 }
 

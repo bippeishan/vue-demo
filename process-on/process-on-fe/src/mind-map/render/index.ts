@@ -3,7 +3,7 @@ import MindMap from '..';
 import { DataItem } from '../node/type';
 import { Opt } from './type';
 import Node from '../node';
-import renderUtils from './utils';
+import renderUtils, { copyNodeTree } from './utils';
 import nodeUtils from '../node/utils';
 
 const nodeMarginX = 100;
@@ -45,6 +45,10 @@ class Render {
 
   bindFn() {
     this.handleDrawClick = this.handleDrawClick.bind(this);
+    this.insertChildNode = this.insertChildNode.bind(this);
+    this.removeNode = this.removeNode.bind(this);
+    this.moveNodeTo = this.moveNodeTo.bind(this);
+    this.removeNodeWrap = this.removeNodeWrap.bind(this);
   }
 
   bindEvent() {
@@ -119,7 +123,20 @@ class Render {
         i -= 1;
       }
     }
-    this.mindMap.emit('node_active', null, []);
+    // this.mindMap.emit('node_active', null, []);
+    this.mindMap.render();
+  }
+
+  // 移动一个节点作为另一个节点的子节点
+  moveNodeTo(node: Node, toNode: Node) {
+    if (node.isRoot) {
+      return;
+    }
+    const copyData = copyNodeTree({}, node);
+    this.removeActiveNode(node);
+    renderUtils.removeOneNode(node);
+    // this.mindMap.emit('node_active', null, this.activeNodeList);
+    toNode.nodeData.children.push(copyData);
     this.mindMap.render();
   }
 
@@ -129,13 +146,14 @@ class Render {
 
   // 注册命令
   registerCommands() {
-    this.mindMap.command.add('INSERT_CHILD_NODE', this.insertChildNode.bind(this));
-    this.mindMap.command.add('REMOVE_NODE', this.removeNode.bind(this));
+    this.mindMap.command.add('INSERT_CHILD_NODE', this.insertChildNode);
+    this.mindMap.command.add('REMOVE_NODE', this.removeNode);
+    this.mindMap.command.add('MOVE_NODE_TO', this.moveNodeTo);
   }
 
   // 注册快捷键
   registerShortcutKeys() {
-    this.mindMap.keyCommand.addShortcut('Del|Backspace', this.removeNodeWrap.bind(this));
+    this.mindMap.keyCommand.addShortcut('Del|Backspace', this.removeNodeWrap);
   }
 
   /**

@@ -83,10 +83,33 @@ const bfsWalk = (root?: Node, callback?: (val?: Node) => string) => {
   }
 };
 
+// 极简的深拷贝
+export const simpleDeepClone = (data: any) => {
+  try {
+    return JSON.parse(JSON.stringify(data));
+  } catch (error) {
+    return null;
+  }
+};
+
+export const copyNodeTree = (tree: any, root: any) => {
+  tree.data = simpleDeepClone(root.nodeData.data);
+  // tree.data.isActive = false
+  tree.children = [];
+  if (root.children && root.children.length > 0) {
+    root.children.forEach((item: any, index: number) => {
+      tree.children[index] = copyNodeTree({}, item);
+    });
+  }
+  return tree;
+};
+
 export default {
   walk,
   asyncRun,
   getNodeIndex,
   removeOneNode,
   bfsWalk,
+  copyNodeTree,
+  simpleDeepClone,
 };

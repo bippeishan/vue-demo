@@ -88,6 +88,7 @@ class Node {
   }
 
   handleNodeMouseup(e: any) {
+    console.log('handleNodeMouseup');
     e.stopPropagation();
     this.mindMap.emit('node_mouseup', this, e);
   }
