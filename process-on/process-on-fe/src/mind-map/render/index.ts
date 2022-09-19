@@ -48,6 +48,7 @@ class Render {
     this.insertChildNode = this.insertChildNode.bind(this);
     this.removeNode = this.removeNode.bind(this);
     this.moveNodeTo = this.moveNodeTo.bind(this);
+    this.insertAfter = this.insertAfter.bind(this);
     this.removeNodeWrap = this.removeNodeWrap.bind(this);
   }
 
@@ -140,6 +141,36 @@ class Render {
     this.mindMap.render();
   }
 
+  // 移动一个节点作为另一个节点后面的兄弟节点
+  insertAfter(node: Node, exist: Node) {
+    if (node.isRoot) {
+      return;
+    }
+    const { parent } = node;
+    const childList = parent?.children || [];
+    // 要移动节点的索引
+    const index = childList.findIndex((item) => item === node);
+    if (index === -1) {
+      return;
+    }
+    // 目标节点的索引
+    let existIndex = childList.findIndex((item) => item === exist);
+    if (existIndex === -1) {
+      return;
+    }
+    // 当前节点在目标节点前面
+    if (index >= existIndex) {
+      existIndex += 1;
+    }
+    // 节点实例
+    childList.splice(index, 1);
+    childList.splice(existIndex, 0, node);
+    // 节点数据
+    parent?.nodeData.children.splice(index, 1);
+    parent?.nodeData.children.splice(existIndex, 0, node.nodeData);
+    this.mindMap.render();
+  }
+
   removeNodeWrap() {
     this.mindMap.execCommand('REMOVE_NODE');
   }
@@ -149,6 +180,7 @@ class Render {
     this.mindMap.command.add('INSERT_CHILD_NODE', this.insertChildNode);
     this.mindMap.command.add('REMOVE_NODE', this.removeNode);
     this.mindMap.command.add('MOVE_NODE_TO', this.moveNodeTo);
+    this.mindMap.command.add('INSERT_AFTER', this.insertAfter);
   }
 
   // 注册快捷键
