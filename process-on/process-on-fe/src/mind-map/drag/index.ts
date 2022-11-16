@@ -6,8 +6,6 @@ import Node from '../node';
 import renderUtils from '../render/utils';
 import styleUtils from '../style/utils';
 
-// 检查是否前后加节点的额外距离
-const extraHeight = 20;
 const virtualChildWidth = 140;
 const virtualChildHeight = 40;
 // 虚拟节点直接的距离
@@ -30,6 +28,7 @@ class Drag {
 
   mouseMoveY: number;
 
+  // 鼠标在节点按下时，鼠标位置距离节点左侧距离
   offsetX: number;
 
   offsetY: number;
@@ -38,7 +37,7 @@ class Drag {
 
   cloneNodeTop: number;
 
-  // 重叠节点
+  // 重叠节点: 当前遍历节点
   overlapNode?: Node;
 
   // 移动节点的指示位置
@@ -129,11 +128,11 @@ class Drag {
   }
 
   /**
-   * 添加哥哥节点
+   * 添加弟弟节点
    */
   addAfterBrother() {
     if (this.overlapNode && (this.VirtualChildGroup?.transform().translateX !== this.overlapNode.left || this.VirtualChildGroup?.transform().translateY !== this.overlapNode.top)) {
-      console.log('添加虚拟哥哥节点');
+      console.log('添加虚拟弟弟节点');
       // 1. 新建引导节点
       this.drawGuideNode();
       if (this.VirtualChildGroup) {
@@ -144,7 +143,7 @@ class Drag {
         styleUtils.rect(virtualChild.rect(virtualChildWidth, virtualChildHeight), { strokeColor: '#e67e22', fillColor: 'transparent' });
         // 3. 连线
         const line = this.VirtualChildGroup.path();
-        line.plot(`M ${this.overlapNode.width} 0 L ${virtualNodeMargin} ${20 + virtualChildHeight / 2}`);
+        line.plot(`M ${(3 * this.overlapNode.width) / 4} ${this.overlapNode.height} L ${virtualNodeMargin} ${virtualChildHeight / 2}`);
         styleUtils.line(line, { color: '#e67e22' });
       }
     }
@@ -179,6 +178,18 @@ class Drag {
       const right = left + width;
       const bottom = top + height;
 
+      /**
+       * node: 当前遍历节点
+       * left: 当前遍历节点左侧距画布边缘距离
+       * width: 当前遍历节点宽度
+       * right: 当前遍历节点右侧距画布左边缘距离
+       * top: 当前遍历节点上侧距画布上边缘距离
+       * bottom: 当前遍历节点下侧距画布上边缘距离
+       * cloneNodeLeft: 克隆节点左侧距画布边缘距离
+       * cloneNodeTop: 克隆节点上侧距画布上边缘距离
+       * cloneNodeHeight: 克隆节点高度
+       */
+
       // 检测是否重叠
       if (!this.overlapNode) {
         /**
@@ -197,18 +208,19 @@ class Drag {
         // if (left <= checkRight && right >= this.cloneNodeLeft && top <= checkBottom && bottom >= this.cloneNodeTop) {
         //   this.overlapNode = node;
         // }
-        const cloneNodeHeight = this.clone?.node?.getBBox?.().height || 0;
-        if (left + width / 2 >= this.cloneNodeLeft && left + width / 2 <= right && top <= this.cloneNodeTop + height / 2 && bottom >= this.cloneNodeTop + height / 2) {
-          // console.log('加到子节点');
+        console.log('00:', left, width, top, height, right, this.cloneNodeLeft, this.cloneNodeTop);
+        console.log('11:', left + width / 2 >= this.cloneNodeLeft, left + width / 2 <= right, top + height / 2 >= this.cloneNodeTop, top <= this.cloneNodeTop + height / 2);
+
+        if (left + width / 2 >= this.cloneNodeLeft && left + width / 2 <= right && top + height / 2 >= this.cloneNodeTop && top <= this.cloneNodeTop + height / 2) {
+          console.log('加到子节点');
           this.moveNodeType = 'addChild';
           this.overlapNode = node;
           this.addVirtualChild();
           return '';
         }
-        console.log('11:', left + width / 2 >= this.cloneNodeLeft, left + width / 2 <= right, top >= this.cloneNodeTop + cloneNodeHeight / 2, top + extraHeight <= this.cloneNodeTop + cloneNodeHeight / 2);
-        console.log('22:', top + extraHeight, this.cloneNodeTop + cloneNodeHeight / 2, top, this.cloneNodeTop, cloneNodeHeight / 2);
+        console.log('22:', left + width / 2 >= this.cloneNodeLeft, left <= this.cloneNodeLeft, bottom >= this.cloneNodeTop, top + height / 2 <= this.cloneNodeTop);
 
-        if (left + width / 2 >= this.cloneNodeLeft && left + width / 2 <= right && top >= this.cloneNodeTop + cloneNodeHeight / 2 && top + extraHeight <= this.cloneNodeTop + cloneNodeHeight / 2) {
+        if (left + width / 2 >= this.cloneNodeLeft && left <= this.cloneNodeLeft && bottom >= this.cloneNodeTop && top + height / 2 <= this.cloneNodeTop) {
           console.log('加到弟弟节点');
           this.moveNodeType = 'addAfterBrother';
           this.overlapNode = node;
@@ -292,8 +304,8 @@ class Drag {
       this.mindMap.execCommand('MOVE_NODE_TO', this.node, this.overlapNode);
     }
     if (this.node && this.overlapNode && this.moveNodeType === 'addAfterBrother') {
-      // 移动节点作为哥哥节点
-      console.log('移动节点作为哥哥节点');
+      // 移动节点作为弟弟节点
+      console.log('移动节点作为弟弟节点');
       // this.mindMap.execCommand('INSERT_AFTER', this.node, this.overlapNode);
     }
   }
