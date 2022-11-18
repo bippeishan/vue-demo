@@ -56,6 +56,7 @@ const getNodeIndex = (node: Node) => (node.parent ? node.parent.children.findInd
 // 移除某个指定节点
 const removeOneNode = (node: Node) => {
   const index = getNodeIndex(node);
+  console.log('removeOneNode:', index);
   node.remove();
   node.parent?.children.splice(index, 1);
   node.parent?.nodeData.children.splice(index, 1);

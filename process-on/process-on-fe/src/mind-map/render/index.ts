@@ -23,6 +23,7 @@ class Render {
   constructor(opt: Opt) {
     this.mindMap = opt.mindMap;
     this.renderTree = merge({}, this.mindMap.opt.rootData || {});
+    console.log('this.renderTree:', this.renderTree);
     this.activeNodeList = [];
     this.reRender = false;
 
@@ -146,15 +147,27 @@ class Render {
     if (node.isRoot) {
       return;
     }
+    console.log('node:', node);
+    console.log('exist:', exist);
     const { parent } = node;
     const childList = parent?.children || [];
+    // eslint-disable-next-line eqeqeq
+    console.log('childList:', childList[0] == node, childList[0]);
+    // eslint-disable-next-line eqeqeq
+    const index_test = parent?.children ? parent?.children.findIndex((item) => item == node) : 0;
+    console.log('index_test:', index_test);
     // 要移动节点的索引
-    const index = childList.findIndex((item) => item === node);
+    const index = childList.findIndex((item) => {
+      console.log('item:', item);
+      return item === node;
+    });
+    console.log('index:', index);
     if (index === -1) {
       return;
     }
     // 目标节点的索引
     let existIndex = childList.findIndex((item) => item === exist);
+    console.log('existIndex:', existIndex);
     if (existIndex === -1) {
       return;
     }
@@ -168,6 +181,7 @@ class Render {
     // 节点数据
     parent?.nodeData.children.splice(index, 1);
     parent?.nodeData.children.splice(existIndex, 0, node.nodeData);
+    console.log('parent:', parent);
     this.mindMap.render();
   }
 
@@ -192,7 +206,7 @@ class Render {
    * 创建节点，并关联数据、节点父子关系、层级
    */
   createNode(data: DataItem, parent: DataItem | null, isRoot: boolean) {
-    let newNode = null;
+    let newNode: any = null;
     if (data?.node && !this.reRender) {
       newNode = data?.node;
       newNode.reset();

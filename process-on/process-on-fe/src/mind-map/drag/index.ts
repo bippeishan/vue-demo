@@ -93,6 +93,7 @@ class Drag {
       this.VirtualChildGroup.remove();
       this.VirtualChildGroup = undefined;
     }
+    this.removeVirtualChildAndLine();
   }
 
   // 删除虚拟子节点和连线
@@ -231,8 +232,8 @@ class Drag {
         // if (left <= checkRight && right >= this.cloneNodeLeft && top <= checkBottom && bottom >= this.cloneNodeTop) {
         //   this.overlapNode = node;
         // }
-        console.log('00:', left, width, top, height, right, this.cloneNodeLeft, this.cloneNodeTop, this.offsetX);
-        console.log('11:', left + width / 2 >= this.cloneNodeLeft, left + width / 2 <= right, top + height / 2 >= this.cloneNodeTop, top <= this.cloneNodeTop + height / 2);
+        // console.log('00:', left, width, top, height, right, this.cloneNodeLeft, this.cloneNodeTop, this.offsetX);
+        // console.log('11:', left + width / 2 >= this.cloneNodeLeft, left + width / 2 <= right, top + height / 2 >= this.cloneNodeTop, top <= this.cloneNodeTop + height / 2);
 
         if (left + width / 2 >= this.cloneNodeLeft && left + width / 2 <= right && top + height / 2 >= this.cloneNodeTop && top <= this.cloneNodeTop + height / 2) {
           console.log('加到子节点');
@@ -242,7 +243,7 @@ class Drag {
           this.addVirtualChild();
           return '';
         }
-        console.log('22:', left + width / 2 >= this.cloneNodeLeft, left <= this.cloneNodeLeft, bottom >= this.cloneNodeTop, top + height / 2 <= this.cloneNodeTop);
+        // console.log('22:', left + width / 2 >= this.cloneNodeLeft, left <= this.cloneNodeLeft, bottom >= this.cloneNodeTop, top + height / 2 <= this.cloneNodeTop);
 
         if (left + width / 2 >= this.cloneNodeLeft && left <= this.cloneNodeLeft && bottom >= this.cloneNodeTop && top + height / 2 <= this.cloneNodeTop) {
           console.log('加到弟弟节点');
@@ -327,12 +328,13 @@ class Drag {
     this.removeVirtualChild();
     if (this.node && this.overlapNode && this.moveNodeType === 'addChild') {
       // 移动节点作为子节点
+      console.log('移动节点作为子节点');
       this.mindMap.execCommand('MOVE_NODE_TO', this.node, this.overlapNode);
     }
     if (this.node && this.overlapNode && this.moveNodeType === 'addAfterBrother') {
       // 移动节点作为弟弟节点
       console.log('移动节点作为弟弟节点');
-      // this.mindMap.execCommand('INSERT_AFTER', this.node, this.overlapNode);
+      this.mindMap.execCommand('INSERT_AFTER', this.node, this.overlapNode);
     }
   }
 
