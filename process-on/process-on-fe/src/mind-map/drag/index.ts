@@ -199,8 +199,8 @@ class Drag {
 
       // eslint-disable-next-line object-curly-newline
       const { left, top, width, height } = node;
-      const right = left + width;
-      const bottom = top + height;
+      // const right = left + width;
+      // const bottom = top + height;
 
       /**
        * node: 当前遍历节点
@@ -235,7 +235,15 @@ class Drag {
         // console.log('00:', left, width, top, height, right, this.cloneNodeLeft, this.cloneNodeTop, this.offsetX);
         // console.log('11:', left + width / 2 >= this.cloneNodeLeft, left + width / 2 <= right, top + height / 2 >= this.cloneNodeTop, top <= this.cloneNodeTop + height / 2);
 
-        if (left + width / 2 >= this.cloneNodeLeft && left + width / 2 <= right && top + height / 2 >= this.cloneNodeTop && top <= this.cloneNodeTop + height / 2) {
+        // if (left + width / 2 >= this.cloneNodeLeft && left + width / 2 <= right && top + height / 2 >= this.cloneNodeTop && top <= this.cloneNodeTop + height / 2) {
+        //   console.log('加到子节点');
+        //   this.removeVirtualChildAndLine();
+        //   this.moveNodeType = 'addChild';
+        //   this.overlapNode = node;
+        //   this.addVirtualChild();
+        //   return '';
+        // }
+        if (left + width >= this.cloneNodeLeft && left <= this.cloneNodeLeft && top + height / 5 <= this.cloneNodeTop && top + (4 * height) / 5 >= this.cloneNodeTop) {
           console.log('加到子节点');
           this.removeVirtualChildAndLine();
           this.moveNodeType = 'addChild';
@@ -245,7 +253,15 @@ class Drag {
         }
         // console.log('22:', left + width / 2 >= this.cloneNodeLeft, left <= this.cloneNodeLeft, bottom >= this.cloneNodeTop, top + height / 2 <= this.cloneNodeTop);
 
-        if (left + width / 2 >= this.cloneNodeLeft && left <= this.cloneNodeLeft && bottom >= this.cloneNodeTop && top + height / 2 <= this.cloneNodeTop) {
+        // if (left + width / 2 >= this.cloneNodeLeft && left <= this.cloneNodeLeft && bottom >= this.cloneNodeTop && top + height / 2 <= this.cloneNodeTop) {
+        //   console.log('加到弟弟节点');
+        //   this.removeVirtualChildAndLine();
+        //   this.moveNodeType = 'addAfterBrother';
+        //   this.overlapNode = node;
+        //   this.addAfterBrother();
+        //   return '';
+        // }
+        if (left + width >= this.cloneNodeLeft && left <= this.cloneNodeLeft && top + (4 * height) / 5 < this.cloneNodeTop && top + height >= this.cloneNodeTop) {
           console.log('加到弟弟节点');
           this.removeVirtualChildAndLine();
           this.moveNodeType = 'addAfterBrother';
@@ -255,6 +271,7 @@ class Drag {
         }
       }
 
+      this.removeVirtualChild();
       return '';
     });
   }

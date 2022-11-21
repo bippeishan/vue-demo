@@ -147,41 +147,33 @@ class Render {
     if (node.isRoot) {
       return;
     }
-    console.log('node:', node);
-    console.log('exist:', exist);
     const { parent } = node;
     const childList = parent?.children || [];
-    // eslint-disable-next-line eqeqeq
-    console.log('childList:', childList[0] == node, childList[0]);
-    // eslint-disable-next-line eqeqeq
-    const index_test = parent?.children ? parent?.children.findIndex((item) => item == node) : 0;
-    console.log('index_test:', index_test);
     // 要移动节点的索引
-    const index = childList.findIndex((item) => {
-      console.log('item:', item);
-      return item === node;
-    });
-    console.log('index:', index);
-    if (index === -1) {
-      return;
-    }
+    const index = node.position;
     // 目标节点的索引
-    let existIndex = childList.findIndex((item) => item === exist);
-    console.log('existIndex:', existIndex);
-    if (existIndex === -1) {
-      return;
-    }
-    // 当前节点在目标节点前面
-    if (index >= existIndex) {
-      existIndex += 1;
-    }
+    const existIndex = exist.position;
+    const existChildList = exist.parent?.children || [];
     // 节点实例
+    // 在目标节点后插入节点
+    existChildList.forEach((child) => {
+      if (child.position > existIndex) {
+        child.position += 1;
+      }
+    });
+    node.position = existIndex + 1;
+    existChildList.splice(existIndex, 0, node);
+    // 删除当前节点
+    childList.forEach((child) => {
+      if (child.position > index) {
+        child.position -= 1;
+      }
+    });
     childList.splice(index, 1);
-    childList.splice(existIndex, 0, node);
+
     // 节点数据
     parent?.nodeData.children.splice(index, 1);
-    parent?.nodeData.children.splice(existIndex, 0, node.nodeData);
-    console.log('parent:', parent);
+    exist.parent?.nodeData.children.splice(existIndex, 0, node.nodeData);
     this.mindMap.render();
   }
 

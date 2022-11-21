@@ -44,6 +44,9 @@ class Node {
 
   isDrag: boolean;
 
+  // 节点在parent中的位置
+  position: number;
+
   constructor(opt = {} as Opt) {
     this.mindMap = opt.mindMap;
     this.nodeData = utils.handleData(opt.data);
@@ -60,6 +63,7 @@ class Node {
     this.lines = [];
     // 是否在拖拽中
     this.isDrag = false;
+    this.position = 0;
 
     this.bindFn();
     this.createNodeData();
@@ -197,6 +201,7 @@ class Node {
 
   // 添加子节点
   addChildren(node: Node) {
+    node.position = node.parent?.children.length || 0;
     this.children.push(node);
   }
 
