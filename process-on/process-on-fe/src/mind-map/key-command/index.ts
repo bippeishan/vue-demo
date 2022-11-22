@@ -46,6 +46,7 @@ class KeyCommand {
     key.split(/\s*\|\s*/).forEach((item) => {
       if (this.shortcutMap[item]) {
         if (fn) {
+          // TODO: 不确定有没有不相等的问题
           const index = this.shortcutMap[item].findIndex((f) => f === fn);
           if (index !== -1) {
             this.shortcutMap[item].splice(index, 1);

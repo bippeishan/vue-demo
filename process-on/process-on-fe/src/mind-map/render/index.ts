@@ -23,7 +23,7 @@ class Render {
   constructor(opt: Opt) {
     this.mindMap = opt.mindMap;
     this.renderTree = merge({}, this.mindMap.opt.rootData || {});
-    console.log('this.renderTree:', this.renderTree);
+    // console.log('this.renderTree:', this.renderTree);
     this.activeNodeList = [];
     this.reRender = false;
 
@@ -59,7 +59,7 @@ class Render {
   }
 
   findActiveNodeIndex(node: Node) {
-    return this.activeNodeList.findIndex((item) => item === node);
+    return this.activeNodeList.findIndex((item) => item.uuid === node.uuid);
   }
 
   addActiveNode(node: Node) {
@@ -249,9 +249,9 @@ class Render {
   updateBrothers(node: Node, addHeight: number) {
     if (node.parent) {
       const childrenList = node.parent.children;
-      const index = childrenList.findIndex((it) => it === node);
+      const index = childrenList.findIndex((it) => it.uuid === node.uuid);
       childrenList.forEach((it, idx) => {
-        if (it === node) {
+        if (it.uuid === node.uuid) {
           return;
         }
         let offest = 0;

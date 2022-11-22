@@ -74,6 +74,7 @@ class Drag {
 
   // 创建克隆节点
   createCloneNode() {
+    console.log('创建克隆节点:', this.clone, this.node);
     if (!this.clone && this.node) {
       this.clone = this.node.group?.clone();
       this.clone?.opacity(0.5);
@@ -175,17 +176,11 @@ class Drag {
 
   // 检测重叠节点
   checkOverlapNode() {
-    // console.log('检测重叠节点:', this.clone);
-    // const checkRight = this.cloneNodeLeft + (this.node?.width || 0);
-    // const checkBottom = this.cloneNodeTop + (this.node?.height || 0);
-
     this.overlapNode = undefined;
     this.moveNodeType = undefined;
 
     renderUtils.bfsWalk(this.mindMap.renderer.root, (node) => {
-      // console.log('99:', node);
-
-      if (node === this.node) {
+      if (node?.uuid === this.node?.uuid) {
         return '';
       }
 
@@ -199,8 +194,6 @@ class Drag {
 
       // eslint-disable-next-line object-curly-newline
       const { left, top, width, height } = node;
-      // const right = left + width;
-      // const bottom = top + height;
 
       /**
        * node: 当前遍历节点
@@ -229,20 +222,9 @@ class Drag {
          * 4. top + extraHeight <= this.cloneNodeTop + 1/2 this.clone.height
          * 节点后加节点: 和节点前加节点类似
          */
-        // if (left <= checkRight && right >= this.cloneNodeLeft && top <= checkBottom && bottom >= this.cloneNodeTop) {
-        //   this.overlapNode = node;
-        // }
         // console.log('00:', left, width, top, height, right, this.cloneNodeLeft, this.cloneNodeTop, this.offsetX);
         // console.log('11:', left + width / 2 >= this.cloneNodeLeft, left + width / 2 <= right, top + height / 2 >= this.cloneNodeTop, top <= this.cloneNodeTop + height / 2);
 
-        // if (left + width / 2 >= this.cloneNodeLeft && left + width / 2 <= right && top + height / 2 >= this.cloneNodeTop && top <= this.cloneNodeTop + height / 2) {
-        //   console.log('加到子节点');
-        //   this.removeVirtualChildAndLine();
-        //   this.moveNodeType = 'addChild';
-        //   this.overlapNode = node;
-        //   this.addVirtualChild();
-        //   return '';
-        // }
         if (left + width >= this.cloneNodeLeft && left <= this.cloneNodeLeft && top + height / 5 <= this.cloneNodeTop && top + (4 * height) / 5 >= this.cloneNodeTop) {
           console.log('加到子节点');
           this.removeVirtualChildAndLine();
@@ -253,14 +235,6 @@ class Drag {
         }
         // console.log('22:', left + width / 2 >= this.cloneNodeLeft, left <= this.cloneNodeLeft, bottom >= this.cloneNodeTop, top + height / 2 <= this.cloneNodeTop);
 
-        // if (left + width / 2 >= this.cloneNodeLeft && left <= this.cloneNodeLeft && bottom >= this.cloneNodeTop && top + height / 2 <= this.cloneNodeTop) {
-        //   console.log('加到弟弟节点');
-        //   this.removeVirtualChildAndLine();
-        //   this.moveNodeType = 'addAfterBrother';
-        //   this.overlapNode = node;
-        //   this.addAfterBrother();
-        //   return '';
-        // }
         if (left + width >= this.cloneNodeLeft && left <= this.cloneNodeLeft && top + (4 * height) / 5 < this.cloneNodeTop && top + height >= this.cloneNodeTop) {
           console.log('加到弟弟节点');
           this.removeVirtualChildAndLine();
@@ -284,7 +258,6 @@ class Drag {
 
     this.offsetX = e.clientX - node.left;
     this.offsetY = e.clientY - node.top;
-    // console.log('handleNodeMousedown:', this.offsetX, this.offsetY);
 
     this.node = node;
     this.isMousedown = true;
@@ -327,7 +300,16 @@ class Drag {
     if (!this.clone) {
       return;
     }
+    this.clone.clear();
     this.clone.remove();
+    this.clone = undefined;
+  }
+
+  // 清空覆盖节点等数据
+  clearData() {
+    this.overlapNode = undefined;
+    this.moveNodeType = undefined;
+    this.node = undefined;
   }
 
   handleNodeMouseup(_e: any) {
@@ -353,6 +335,8 @@ class Drag {
       console.log('移动节点作为弟弟节点');
       this.mindMap.execCommand('INSERT_AFTER', this.node, this.overlapNode);
     }
+    // 清除数据
+    this.clearData();
   }
 
   bindFn() {

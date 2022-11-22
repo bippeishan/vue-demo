@@ -51,12 +51,11 @@ const asyncRun = (taskList: Array<() => any>, callback?: () => void) => {
 };
 
 // 获取节点在同级里的索引位置
-const getNodeIndex = (node: Node) => (node.parent ? node.parent.children.findIndex((item) => item === node) : 0);
+const getNodeIndex = (node: Node) => (node.parent ? node.parent.children.findIndex((item) => item.uuid === node.uuid) : 0);
 
 // 移除某个指定节点
 const removeOneNode = (node: Node) => {
   const index = getNodeIndex(node);
-  console.log('removeOneNode:', index);
   node.remove();
   node.parent?.children.splice(index, 1);
   node.parent?.nodeData.children.splice(index, 1);

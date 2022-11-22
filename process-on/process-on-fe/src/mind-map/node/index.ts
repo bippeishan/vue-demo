@@ -1,4 +1,5 @@
 import { G, Path, Text } from '@svgdotjs/svg.js';
+import { v4 as uuidv4 } from 'uuid';
 import { Opt, DataItem, NodeProp } from './type';
 import utils from './utils';
 import styleUtils from '../style/utils';
@@ -47,6 +48,9 @@ class Node {
   // 节点在parent中的位置
   position: number;
 
+  // 唯一id
+  uuid: string;
+
   constructor(opt = {} as Opt) {
     this.mindMap = opt.mindMap;
     this.nodeData = utils.handleData(opt.data);
@@ -64,6 +68,7 @@ class Node {
     // 是否在拖拽中
     this.isDrag = false;
     this.position = 0;
+    this.uuid = uuidv4();
 
     this.bindFn();
     this.createNodeData();
@@ -299,17 +304,10 @@ class Node {
       return;
     }
 
-    // if (this.nodeData.data.text === '中心主题') {
-    //   console.log('11:', this.left, this.top);
-    // }
-
     const t = this.group.transform();
     const translateX = this.left - (t.translateX || 0);
     const translateY = this.top - (t.translateY || 0);
-    // if (this.nodeData.data.text === '中心主题') {
-    //   console.log('22:', t.translateX, t.translateY);
-    //   console.log('33:', translateX, translateY);
-    // }
+
     if (!layout) {
       // this.group.animate(300).element().translate(translateX, translateY);
       this.group.translate(translateX, translateY);

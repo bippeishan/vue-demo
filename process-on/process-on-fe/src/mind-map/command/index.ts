@@ -35,6 +35,7 @@ class Command {
       this.commands[name] = [];
       delete this.commands[name];
     } else {
+      // TODO: 不确定这里有没有不相等的问题存在
       const index = this.commands[name].findIndex((item) => item === fn);
       if (index !== -1) {
         this.commands[name].splice(index, 1);
