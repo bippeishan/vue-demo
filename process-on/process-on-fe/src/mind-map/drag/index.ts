@@ -87,6 +87,23 @@ class Drag {
     }
   }
 
+  // 删除克隆节点
+  removeCloneNode() {
+    if (!this.clone) {
+      return;
+    }
+    this.clone.clear();
+    this.clone.remove();
+    this.clone = undefined;
+  }
+
+  // 清空覆盖节点等数据
+  clearData() {
+    this.overlapNode = undefined;
+    this.moveNodeType = undefined;
+    this.node = undefined;
+  }
+
   // 删除引导节点和虚拟子节点
   removeVirtualChild() {
     if (this.VirtualChildGroup) {
@@ -125,19 +142,11 @@ class Drag {
     }
   }
 
-  /**
-   * 添加虚拟子节点
-   * 1. 创建和overlapNode同样宽高、位置的橙色矩形
-   * 2. 创建橙色矩形的子节点，橙色矩形
-   * 3. 连线
-   */
-  addVirtualChild() {
+  isNewOverlapNode() {
     if (this.overlapNode && (this.VirtualChildGroup?.transform().translateX !== this.overlapNode.left || this.VirtualChildGroup?.transform().translateY !== this.overlapNode.top)) {
-      console.log('添加虚拟子节点');
-      // 1. 新建引导节点
-      this.drawGuideNode();
+      return true;
     }
-    this.addVirtualChildAndLine();
+    return false;
   }
 
   // 添加虚拟子节点和连线
@@ -147,14 +156,19 @@ class Drag {
       this.virtualChild = new G();
       this.VirtualChildGroup.add(this.virtualChild);
 
-      const virtualChildTranslateY = this.moveNodeType === 'addChild' ? (this.overlapNode.height - virtualChildHeight) / 2 : this.overlapNode.height;
+      let virtualChildTranslateY = this.moveNodeType === 'addChild' ? (this.overlapNode.height - virtualChildHeight) / 2 : this.overlapNode.height;
+      virtualChildTranslateY = this.moveNodeType === 'addBeforeBrother' ? -virtualChildHeight : virtualChildTranslateY;
+
       this.virtualChild.translate(virtualNodeMargin, virtualChildTranslateY);
       styleUtils.rect(this.virtualChild.rect(virtualChildWidth, virtualChildHeight), { strokeColor: '#e67e22', fillColor: 'transparent' });
 
       // 3. 连线
       const virtualLineStartX = this.moveNodeType === 'addChild' ? this.overlapNode.width : (3 * this.overlapNode.width) / 4;
-      const virtualLineStartY = this.moveNodeType === 'addChild' ? this.overlapNode.height / 2 : this.overlapNode.height;
-      const virtualLineEndY = this.moveNodeType === 'addChild' ? this.overlapNode.height / 2 : this.overlapNode.height + virtualChildHeight / 2;
+      let virtualLineStartY = this.moveNodeType === 'addChild' ? this.overlapNode.height / 2 : this.overlapNode.height;
+      virtualLineStartY = this.moveNodeType === 'addBeforeBrother' ? 0 : virtualLineStartY;
+      let virtualLineEndY = this.moveNodeType === 'addChild' ? this.overlapNode.height / 2 : this.overlapNode.height + virtualChildHeight / 2;
+      virtualLineEndY = this.moveNodeType === 'addBeforeBrother' ? -virtualChildHeight / 2 : virtualLineEndY;
+
       this.virtualLine = this.VirtualChildGroup.path();
       this.virtualLine.plot(`M ${virtualLineStartX} ${virtualLineStartY} L ${virtualNodeMargin} ${virtualLineEndY}`);
       styleUtils.line(this.virtualLine, { color: '#e67e22' });
@@ -162,11 +176,39 @@ class Drag {
   }
 
   /**
+   * 添加虚拟子节点
+   * 1. 创建和overlapNode同样宽高、位置的橙色矩形
+   * 2. 创建橙色矩形的子节点，橙色矩形
+   * 3. 连线
+   */
+  addVirtualChild() {
+    if (this.isNewOverlapNode()) {
+      console.log('添加虚拟子节点');
+      // 1. 新建引导节点
+      this.drawGuideNode();
+    }
+    this.addVirtualChildAndLine();
+  }
+
+  /**
+   * 添加哥哥节点
+   */
+  addBeforeBrother() {
+    // 当覆盖节点和引导节点都没有发生变化，不重新建引导节点
+    if (this.isNewOverlapNode()) {
+      console.log('添加虚拟哥哥节点');
+      // 1. 新建引导节点
+      this.drawGuideNode();
+    }
+    this.addVirtualChildAndLine();
+  }
+
+  /**
    * 添加弟弟节点
    */
   addAfterBrother() {
     // 当覆盖节点和引导节点都没有发生变化，不重新建引导节点
-    if (this.overlapNode && (this.VirtualChildGroup?.transform().translateX !== this.overlapNode.left || this.VirtualChildGroup?.transform().translateY !== this.overlapNode.top)) {
+    if (this.isNewOverlapNode()) {
       console.log('添加虚拟弟弟节点');
       // 1. 新建引导节点
       this.drawGuideNode();
@@ -235,6 +277,15 @@ class Drag {
         }
         // console.log('22:', left + width / 2 >= this.cloneNodeLeft, left <= this.cloneNodeLeft, bottom >= this.cloneNodeTop, top + height / 2 <= this.cloneNodeTop);
 
+        if (left + width >= this.cloneNodeLeft && left <= this.cloneNodeLeft && top < this.cloneNodeTop && top + (1 * height) / 5 >= this.cloneNodeTop) {
+          console.log('加到哥哥节点');
+          this.removeVirtualChildAndLine();
+          this.moveNodeType = 'addBeforeBrother';
+          this.overlapNode = node;
+          this.addAfterBrother();
+          return '';
+        }
+
         if (left + width >= this.cloneNodeLeft && left <= this.cloneNodeLeft && top + (4 * height) / 5 < this.cloneNodeTop && top + height >= this.cloneNodeTop) {
           console.log('加到弟弟节点');
           this.removeVirtualChildAndLine();
@@ -295,23 +346,6 @@ class Drag {
     }
   }
 
-  // 删除克隆节点
-  removeCloneNode() {
-    if (!this.clone) {
-      return;
-    }
-    this.clone.clear();
-    this.clone.remove();
-    this.clone = undefined;
-  }
-
-  // 清空覆盖节点等数据
-  clearData() {
-    this.overlapNode = undefined;
-    this.moveNodeType = undefined;
-    this.node = undefined;
-  }
-
   handleNodeMouseup(_e: any) {
     // console.log('handleNodeMouseup:', e, this.mindMap);
     if (!this.isMousedown) {
@@ -330,10 +364,15 @@ class Drag {
       console.log('移动节点作为子节点');
       this.mindMap.execCommand('MOVE_NODE_TO', this.node, this.overlapNode);
     }
+    if (this.node && this.overlapNode && this.moveNodeType === 'addBeforeBrother') {
+      // 移动节点作为哥哥节点
+      console.log('移动节点作为哥哥节点');
+      this.mindMap.execCommand('INSERT_AFTER', this.node, this.overlapNode);
+    }
     if (this.node && this.overlapNode && this.moveNodeType === 'addAfterBrother') {
       // 移动节点作为弟弟节点
       console.log('移动节点作为弟弟节点');
-      this.mindMap.execCommand('INSERT_AFTER', this.node, this.overlapNode);
+      this.mindMap.execCommand('INSERT_BEFORE', this.node, this.overlapNode);
     }
     // 清除数据
     this.clearData();

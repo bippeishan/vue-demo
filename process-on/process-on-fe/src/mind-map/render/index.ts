@@ -142,6 +142,41 @@ class Render {
     this.mindMap.render();
   }
 
+  // 移动一个节点作为另一个节点前面的兄弟节点
+  insertBefore(node: Node, exist: Node) {
+    if (node.isRoot) {
+      return;
+    }
+    const { parent } = node;
+    const childList = parent?.children || [];
+    // 要移动节点的索引
+    const index = node.position;
+    // 目标节点的索引
+    const existIndex = exist.position;
+    const existChildList = exist.parent?.children || [];
+    // 节点实例
+    // 在目标节点前插入节点
+    existChildList.forEach((child) => {
+      if (child.position >= existIndex) {
+        child.position += 1;
+      }
+    });
+    node.position = existIndex;
+    existChildList.splice(existIndex - 1, 0, node);
+    // 删除当前节点
+    childList.forEach((child) => {
+      if (child.position > index) {
+        child.position -= 1;
+      }
+    });
+    childList.splice(index, 1);
+
+    // 节点数据
+    parent?.nodeData.children.splice(index, 1);
+    exist.parent?.nodeData.children.splice(existIndex - 1, 0, node.nodeData);
+    this.mindMap.render();
+  }
+
   // 移动一个节点作为另一个节点后面的兄弟节点
   insertAfter(node: Node, exist: Node) {
     if (node.isRoot) {
@@ -187,6 +222,7 @@ class Render {
     this.mindMap.command.add('REMOVE_NODE', this.removeNode);
     this.mindMap.command.add('MOVE_NODE_TO', this.moveNodeTo);
     this.mindMap.command.add('INSERT_AFTER', this.insertAfter);
+    this.mindMap.command.add('INSERT_BEFORE', this.insertBefore);
   }
 
   // 注册快捷键
