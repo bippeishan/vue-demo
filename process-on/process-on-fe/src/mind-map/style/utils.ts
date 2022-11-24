@@ -32,8 +32,15 @@ const line = (node: Path, style?: { color?: string }) => {
   node.stroke({ width: 1, color: style?.color || '#ccc' }).fill('transparent');
 };
 
+const domText = (node: HTMLDivElement, _fontSizeScale = 1) => {
+  node.style.fontFamily = '-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,apple color emoji,segoe ui emoji,Segoe UI Symbol,noto color emoji';
+  node.style.fontSize = '12px';
+  node.style.fontWeight = 'normal';
+};
+
 export default {
   rect,
   text,
   line,
+  domText,
 };

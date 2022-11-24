@@ -1,9 +1,13 @@
-import { Ctx } from './type';
-
 class Style {
-  ctx: Ctx;
+  ctx: any;
 
-  constructor(ctx: Ctx) {
+  fontFamily?: string;
+
+  fontSize?: string;
+
+  fontWeight?: string;
+
+  constructor(ctx: any) {
     this.ctx = ctx;
   }
 }

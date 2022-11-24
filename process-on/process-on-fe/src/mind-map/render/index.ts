@@ -5,6 +5,7 @@ import { Opt } from './type';
 import Node from '../node';
 import renderUtils, { copyNodeTree } from './utils';
 import nodeUtils from '../node/utils';
+import TextEdit from '../text-edit';
 
 const nodeMarginX = 100;
 const nodeMarginY = 50;
@@ -20,12 +21,15 @@ class Render {
 
   reRender: boolean;
 
+  textEdit: TextEdit;
+
   constructor(opt: Opt) {
     this.mindMap = opt.mindMap;
     this.renderTree = merge({}, this.mindMap.opt.rootData || {});
     // console.log('this.renderTree:', this.renderTree);
     this.activeNodeList = [];
     this.reRender = false;
+    this.textEdit = new TextEdit(this);
 
     this.bindFn();
     this.doLayout();

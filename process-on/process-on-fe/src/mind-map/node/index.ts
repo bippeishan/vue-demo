@@ -5,6 +5,7 @@ import utils from './utils';
 import styleUtils from '../style/utils';
 import renderUtils from '../render/utils';
 import MindMap from '..';
+import Style from '../style';
 
 // 矩形节点的边距
 const nodePadding = 8;
@@ -51,9 +52,14 @@ class Node {
   // 唯一id
   uuid: string;
 
+  style: Style;
+
   constructor(opt = {} as Opt) {
     this.mindMap = opt.mindMap;
     this.nodeData = utils.handleData(opt.data);
+    // 样式实例
+    this.style = new Style(this);
+
     this.textData = null;
     this.draw = opt.draw;
     this.width = opt.width || 0;
@@ -91,6 +97,12 @@ class Node {
     this.mindMap.emit('node_click', e, this);
   }
 
+  handleDbClick(e: any) {
+    e.stopPropagation();
+    this.active(e);
+    this.mindMap.emit('node_dblclick', e, this);
+  }
+
   handleNodeMousedown(e: any) {
     e.stopPropagation();
     this.mindMap.emit('node_mousedown', this, e);
@@ -105,6 +117,7 @@ class Node {
   bindFn() {
     this.handleContextMenu = this.handleContextMenu.bind(this);
     this.handleClick = this.handleClick.bind(this);
+    this.handleDbClick = this.handleDbClick.bind(this);
     this.handleNodeMousedown = this.handleNodeMousedown.bind(this);
     this.handleNodeMouseup = this.handleNodeMouseup.bind(this);
   }
@@ -163,6 +176,7 @@ class Node {
     if (this.group) {
       this.group.off('contextmenu', this.handleContextMenu);
       this.group.off('click', this.handleClick);
+      this.group.off('dblclick', this.handleDbClick);
     }
   }
 
@@ -249,6 +263,7 @@ class Node {
 
     // 增加事件监听
     this.group.on('click', this.handleClick);
+    this.group.on('dblclick', this.handleDbClick);
     this.group.on('mousedown', this.handleNodeMousedown);
     this.group.on('mouseup', this.handleNodeMouseup);
     this.group.on('contextmenu', this.handleContextMenu);
