@@ -66,6 +66,7 @@ class Command {
   }
 
   getCopyData() {
+    console.log('getCopyData:', this.mindMap.renderer.renderTree);
     return copyRenderTree({}, this.mindMap.renderer.renderTree);
   }
 }

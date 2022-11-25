@@ -42,7 +42,7 @@ class KeyCommand {
   }
 
   // 移除快捷键命令
-  removeShortcut(key: string, fn: () => void) {
+  removeShortcut(key: string, fn?: () => void) {
     key.split(/\s*\|\s*/).forEach((item) => {
       if (this.shortcutMap[item]) {
         if (fn) {

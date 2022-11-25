@@ -104,6 +104,13 @@ export const copyNodeTree = (tree: any, root: any) => {
   return tree;
 };
 
+// 更新节点数据
+export const setNodeData = (node: Node, data: any) => {
+  Object.keys(data).forEach((key) => {
+    node.nodeData.data[key] = data[key];
+  });
+};
+
 export default {
   walk,
   asyncRun,

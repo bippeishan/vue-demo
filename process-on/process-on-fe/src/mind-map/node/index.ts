@@ -214,8 +214,12 @@ class Node {
       totalWidth += this.textData.width;
       totalHeight += this.textData.height;
     }
+    // 判断节点尺寸是否有变化
+    const changed = this.width !== totalWidth || this.height !== totalHeight;
+
     this.width = totalWidth;
     this.height = totalHeight;
+    return changed;
   }
 
   // 添加子节点

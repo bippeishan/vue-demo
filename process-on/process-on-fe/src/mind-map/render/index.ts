@@ -3,7 +3,7 @@ import MindMap from '..';
 import { DataItem } from '../node/type';
 import { Opt } from './type';
 import Node from '../node';
-import renderUtils, { copyNodeTree } from './utils';
+import renderUtils, { copyNodeTree, setNodeData } from './utils';
 import nodeUtils from '../node/utils';
 import TextEdit from '../text-edit';
 
@@ -55,11 +55,16 @@ class Render {
     this.moveNodeTo = this.moveNodeTo.bind(this);
     this.insertAfter = this.insertAfter.bind(this);
     this.removeNodeWrap = this.removeNodeWrap.bind(this);
+    this.setNodeText = this.setNodeText.bind(this);
+    this.startTextEdit = this.startTextEdit.bind(this);
+    this.endTextEdit = this.endTextEdit.bind(this);
   }
 
   bindEvent() {
     // 点击事件
     this.mindMap.on('draw_click', this.handleDrawClick);
+    this.mindMap.on('before_show_text_edit', this.startTextEdit);
+    this.mindMap.on('hide_text_edit', this.endTextEdit);
   }
 
   findActiveNodeIndex(node: Node) {
@@ -220,6 +225,32 @@ class Render {
     this.mindMap.execCommand('REMOVE_NODE');
   }
 
+  // 设置节点文本
+  setNodeText(node: Node, text: string) {
+    this.setNodeDataRender(node, {
+      text,
+    });
+  }
+
+  insertNodeWrap = () => {
+    if (this.textEdit.showTextEdit) {
+      return;
+    }
+    this.mindMap.execCommand('INSERT_NODE');
+  };
+
+  // 节点编辑取消回车/删除快捷键
+  startTextEdit() {
+    this.mindMap.keyCommand.removeShortcut('Del|Backspace');
+    this.mindMap.keyCommand.removeShortcut('Enter', this.insertNodeWrap);
+  }
+
+  // 结束节点编辑恢复回车/删除快捷键
+  endTextEdit() {
+    this.mindMap.keyCommand.addShortcut('Del|Backspace', this.removeNodeWrap);
+    this.mindMap.keyCommand.addShortcut('Enter', this.insertNodeWrap);
+  }
+
   // 注册命令
   registerCommands() {
     this.mindMap.command.add('INSERT_CHILD_NODE', this.insertChildNode);
@@ -227,6 +258,7 @@ class Render {
     this.mindMap.command.add('MOVE_NODE_TO', this.moveNodeTo);
     this.mindMap.command.add('INSERT_AFTER', this.insertAfter);
     this.mindMap.command.add('INSERT_BEFORE', this.insertBefore);
+    this.mindMap.command.add('SET_NODE_TEXT', this.setNodeText);
   }
 
   // 注册快捷键
@@ -425,6 +457,16 @@ class Render {
       this.clearActive();
     }
     this.doLayout();
+  }
+
+  // 设置节点数据，并判断是否渲染
+  setNodeDataRender(node: Node, data: any) {
+    setNodeData(node, data);
+    const changed = node.getSize();
+    node.renderNode();
+    if (changed) {
+      this.mindMap.render();
+    }
   }
 }
 

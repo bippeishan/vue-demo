@@ -2,6 +2,7 @@ import MindMap from '..';
 import { Opt } from './type';
 import Node from '../node';
 import styleUtils from '../style/utils';
+import getStrWithBrFromHtml from './utils';
 
 class TextEdit {
   mindMap: MindMap;
@@ -21,14 +22,39 @@ class TextEdit {
 
   bindFn() {
     this.show = this.show.bind(this);
+    this.handleDrawClick = this.handleDrawClick.bind(this);
   }
 
   bindEvent() {
     // 节点双击事件
     this.mindMap.on('node_dblclick', this.show);
+    this.mindMap.on('draw_click', this.handleDrawClick);
+  }
+
+  handleDrawClick() {
+    if (!this.showTextEdit) {
+      return;
+    }
+    this.mindMap.renderer.activeNodeList.forEach((node) => {
+      const str = getStrWithBrFromHtml(this.textEditNode?.innerHTML || '');
+      this.mindMap.execCommand('SET_NODE_TEXT', node, str);
+      this.mindMap.render();
+    });
+    this.mindMap.emit('hide_text_edit', this.textEditNode, this.mindMap.renderer.activeNodeList);
+
+    if (this.textEditNode) {
+      this.textEditNode.style.display = 'none';
+      this.textEditNode.innerHTML = '';
+      this.textEditNode.style.fontFamily = 'inherit';
+      this.textEditNode.style.fontSize = 'inherit';
+      this.textEditNode.style.fontWeight = 'normal';
+      this.showTextEdit = false;
+    }
   }
 
   show(_e: any, node: Node) {
+    this.mindMap.emit('before_show_text_edit');
+
     const textRect = node.textData?.node?.node?.getBoundingClientRect();
     console.log('textRect:', textRect);
     if (!this.textEditNode) {
