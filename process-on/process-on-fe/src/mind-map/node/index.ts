@@ -54,6 +54,8 @@ class Node {
 
   style: Style;
 
+  isActive: boolean;
+
   constructor(opt = {} as Opt) {
     this.mindMap = opt.mindMap;
     this.nodeData = utils.handleData(opt.data);
@@ -75,6 +77,7 @@ class Node {
     this.isDrag = false;
     this.position = 0;
     this.uuid = uuidv4();
+    this.isActive = false;
 
     this.bindFn();
     this.createNodeData();
@@ -125,12 +128,13 @@ class Node {
   active(e: Event) {
     e.stopPropagation();
     // console.log('active-1:', this.nodeData, this.nodeData.data.isActive);
-    if (this.nodeData.data.isActive) {
+    if (this.isActive) {
       return;
     }
 
     this.mindMap.renderer.clearActive();
-    utils.setNodeData(this, { isActive: true });
+    // utils.setNodeData(this, { isActive: true });
+    this.isActive = true;
 
     // this.mindMap.emit('before_node_active', this, this.mindMap.renderer.activeNodeList);
     // this.mindMap.renderer.clearActive();
@@ -234,7 +238,7 @@ class Node {
     this.draw.add(this.group);
 
     // console.log('99:', this.nodeData);
-    const isActive = !!this.nodeData.data.isActive;
+    const isActive = !!this.isActive;
 
     styleUtils.rect(this.group.rect(this.width, this.height), { strokeColor: isActive ? '' : '#ffffff' });
     // 根节点在页面居中

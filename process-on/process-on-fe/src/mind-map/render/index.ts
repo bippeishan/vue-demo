@@ -4,7 +4,7 @@ import { DataItem } from '../node/type';
 import { Opt } from './type';
 import Node from '../node';
 import renderUtils, { copyNodeTree, setNodeData } from './utils';
-import nodeUtils from '../node/utils';
+// import nodeUtils from '../node/utils';
 import TextEdit from '../text-edit';
 
 const nodeMarginX = 100;
@@ -81,7 +81,8 @@ class Render {
 
   clearActive() {
     this.activeNodeList.forEach((item) => {
-      nodeUtils.setNodeData(item, { isActive: false });
+      // nodeUtils.setNodeData(item, { isActive: false });
+      item.isActive = false;
       item.renderNode();
     });
     this.activeNodeList = [];

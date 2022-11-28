@@ -3,7 +3,7 @@ import { DataItem } from './type';
 
 const handleData = (data: DataItem) => {
   data.data.expand = typeof data.data.expand === 'boolean' ? data.data.expand : true;
-  data.data.isActive = typeof data.data.isActive === 'boolean' ? data.data.isActive : false;
+  // data.data.isActive = typeof data.data.isActive === 'boolean' ? data.data.isActive : false;
   data.children = data.children || [];
   return data;
 };
