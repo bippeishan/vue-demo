@@ -51,6 +51,7 @@ class Render {
   bindFn() {
     this.handleDrawClick = this.handleDrawClick.bind(this);
     this.insertChildNode = this.insertChildNode.bind(this);
+    this.insertBrotherNode = this.insertBrotherNode.bind(this);
     this.removeNode = this.removeNode.bind(this);
     this.moveNodeTo = this.moveNodeTo.bind(this);
     this.insertAfter = this.insertAfter.bind(this);
@@ -108,6 +109,30 @@ class Render {
       if (node.isRoot) {
         node.initRender = true;
       }
+    });
+
+    this.reRender = false;
+    this.clearActive();
+    this.render();
+  }
+
+  // 插入同级节点
+  insertBrotherNode() {
+    // console.log('插入子节点:', this.activeNodeList);
+    if (this.activeNodeList.length <= 0) {
+      return;
+    }
+    this.activeNodeList.forEach((node) => {
+      if (node.isRoot) {
+        return;
+      }
+      node.parent?.nodeData.children.push({
+        data: {
+          text: '子主题',
+          expand: true,
+        },
+        children: [],
+      });
     });
 
     this.reRender = false;
@@ -189,6 +214,7 @@ class Render {
 
   // 移动一个节点作为另一个节点后面的兄弟节点
   insertAfter(node: Node, exist: Node) {
+    console.log('insertAfter:', node, exist);
     if (node.isRoot) {
       return;
     }
@@ -255,6 +281,7 @@ class Render {
   // 注册命令
   registerCommands() {
     this.mindMap.command.add('INSERT_CHILD_NODE', this.insertChildNode);
+    this.mindMap.command.add('INSERT_BROTHER_NODE', this.insertBrotherNode);
     this.mindMap.command.add('REMOVE_NODE', this.removeNode);
     this.mindMap.command.add('MOVE_NODE_TO', this.moveNodeTo);
     this.mindMap.command.add('INSERT_AFTER', this.insertAfter);

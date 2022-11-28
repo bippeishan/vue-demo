@@ -1,7 +1,8 @@
 <template>
   <div class="contextMenu" v-if="isShow" :style="{ left: left + 'px', top: top + 'px' }">
     <template v-if="type === 'node'">
-      <div class="item" @click="exec('INSERT_CHILD_NODE')">插入子级节点</div>
+      <div class="item" @click="exec('INSERT_CHILD_NODE')">新增子主题</div>
+      <div class="item" @click="exec('INSERT_BROTHER_NODE')">新增同级主题</div>
     </template>
   </div>
 </template>
@@ -78,17 +79,17 @@ const exec = (key: any, disabled?: any) => {
   background: #fff;
   box-shadow: 0 4px 12px 0 hsla(0, 0%, 69%, 0.5);
   border-radius: 4px;
-  padding-top: 16px;
-  padding-bottom: 16px;
-  font-size: 14px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  font-size: 12px;
   font-family: PingFangSC-Regular, PingFang SC;
   font-weight: 400;
   color: #1a1a1a;
 
   .item {
-    height: 28px;
+    height: 24px;
     line-height: 28px;
-    padding-left: 16px;
+    padding-left: 12px;
     cursor: pointer;
 
     &.danger {
