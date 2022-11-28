@@ -2,6 +2,7 @@
   <div class="editContainer">
     <div class="mindMapContainer" ref="mindMapContainer"></div>
     <Contextmenu :mindMap="mindMap"></Contextmenu>
+    <NodeEdit />
   </div>
 </template>
 
@@ -11,6 +12,7 @@ import { useRoute } from 'vue-router';
 import emitter from '../../utils/event-bus';
 import MindMap from '../../mind-map';
 import Contextmenu from './components/context-menu/context-menu.vue';
+import NodeEdit from './components/node-edit/node-edit.vue';
 import Api from '../../service/api';
 
 const route = useRoute();
