@@ -1,7 +1,7 @@
 const { defineConfig } = require('@vue/cli-service');
 const path = require('path');
 
-const apiHost = 'localhost:7002';
+const apiHost = 'localhost:7001';
 const protocol = 'http';
 
 module.exports = defineConfig({

@@ -1,6 +1,11 @@
 <template>
   <el-row class="style-edit-rowmargin">
-    <div class="style-edit-iconbtn"><IFontColor fontColor="#eb2f06" width="18px" height="18px" /></div>
+    <el-popover placement="bottom-start" trigger="click" :show-arrow="false" :width="200">
+      <template #reference>
+        <div class="style-edit-iconbtn"><IFontColor fontColor="#eb2f06" width="18px" height="18px" /></div>
+      </template>
+      <div><ChangeColor /></div>
+    </el-popover>
 
     <el-input-number v-model="fontNum" class="style-edit-selectbtn" :min="1" :max="10" controls-position="right" @change="handleChange" />
   </el-row>
@@ -55,6 +60,7 @@
 import { ref } from 'vue';
 import IFontColor from '../../../../icons/i-font-color.vue';
 import IBorderColor from '../../../../icons/i-border-color.vue';
+import ChangeColor from './modal/change-color.vue';
 
 const fontNum = ref(1);
 const handleChange = (value: number) => {
