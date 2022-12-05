@@ -6,6 +6,7 @@ export interface NodeData extends Record<string, any> {
   text: string;
   expand?: boolean;
   isActive?: boolean;
+  style?: Record<string, any>;
 }
 export interface DataItem {
   data: NodeData;

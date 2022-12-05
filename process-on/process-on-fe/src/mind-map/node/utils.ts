@@ -35,9 +35,20 @@ const setNodeData = (node: Node, data: any) => {
   });
 };
 
+const setNodeStyleData = (node: Node, data: any) => {
+  // console.log('setNodeStyleData:', data);
+  Object.keys(data).forEach((key) => {
+    if (!node.nodeData.data.style) {
+      node.nodeData.data.style = {};
+    }
+    node.nodeData.data.style[key] = data[key];
+  });
+};
+
 export default {
   handleData,
   quadraticCurvePath,
   cubicBezierPath,
   setNodeData,
+  setNodeStyleData,
 };

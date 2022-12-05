@@ -7,6 +7,22 @@ class Style {
 
   fontWeight?: string;
 
+  fontColor?: string;
+
+  borderWidth?: number;
+
+  borderStyle?: string;
+
+  borderColor?: string;
+
+  borderRadius?: number;
+
+  lineWidth?: number;
+
+  lineColor?: string;
+
+  bgColor?: string;
+
   constructor(ctx: any) {
     this.ctx = ctx;
   }

@@ -1,13 +1,15 @@
 <template>
   <el-row class="style-edit-rowmargin">
-    <el-popover placement="bottom-start" trigger="click" :show-arrow="false" :width="200">
+    <el-popover placement="bottom-start" popper-class="popover-nopadding" trigger="click" :show-arrow="false" :width="200">
       <template #reference>
         <div class="style-edit-iconbtn"><IFontColor fontColor="#eb2f06" width="18px" height="18px" /></div>
       </template>
       <div><ChangeColor /></div>
     </el-popover>
 
-    <el-input-number v-model="fontNum" class="style-edit-selectbtn" :min="1" :max="10" controls-position="right" @change="handleChange" />
+    <el-tooltip content="字号大小">
+      <el-input-number v-model="fontNum" class="style-edit-selectbtn" :min="1" :max="10" controls-position="right" @change="handleChange" />
+    </el-tooltip>
   </el-row>
 
   <div class="style-edit-rowmargin style-edit-rowname">边框</div>
@@ -118,9 +120,21 @@ const handleBorderRadiusChange = (value: number) => {
   justify-content: center;
   border: 1px solid #ccc;
   border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    border-color: #6a89cc;
+  }
 }
 .style-edit-selectbtn {
   width: 80px;
   margin-right: 4px;
+}
+</style>
+
+<style lang="less" global>
+.popover-nopadding {
+  padding: 0 !important;
 }
 </style>
