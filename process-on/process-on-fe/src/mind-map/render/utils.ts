@@ -111,6 +111,17 @@ export const setNodeData = (node: Node, data: any) => {
   });
 };
 
+// 更新节点样式数据
+const setNodeStyleData = (node: Node, data: any) => {
+  // console.log('setNodeStyleData:', data);
+  Object.keys(data).forEach((key) => {
+    if (!node.nodeData.data.style) {
+      node.nodeData.data.style = {};
+    }
+    node.nodeData.data.style[key] = data[key];
+  });
+};
+
 export default {
   walk,
   asyncRun,
@@ -119,4 +130,5 @@ export default {
   bfsWalk,
   copyNodeTree,
   simpleDeepClone,
+  setNodeStyleData,
 };

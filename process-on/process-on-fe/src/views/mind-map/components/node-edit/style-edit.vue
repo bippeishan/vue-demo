@@ -4,7 +4,7 @@
       <template #reference>
         <div class="style-edit-iconbtn"><IFontColor fontColor="#eb2f06" width="18px" height="18px" /></div>
       </template>
-      <div><ChangeColor /></div>
+      <div><ChangeColor @onChange="handleFontColorChange" /></div>
     </el-popover>
 
     <el-tooltip content="字号大小">
@@ -63,6 +63,22 @@ import { ref } from 'vue';
 import IFontColor from '../../../../icons/i-font-color.vue';
 import IBorderColor from '../../../../icons/i-border-color.vue';
 import ChangeColor from './modal/change-color.vue';
+import emitter from '../../../../utils/event-bus';
+
+const exec = (key: string, valueObj?: any) => {
+  switch (key) {
+    case 'UPDATE_NODE_STYLE':
+      emitter.emit('execCommand', key, valueObj);
+      break;
+    default:
+      emitter.emit('execCommand', key, valueObj);
+      break;
+  }
+};
+
+const handleFontColorChange = (val: string) => {
+  exec('UPDATE_NODE_STYLE', { fontColor: val });
+};
 
 const fontNum = ref(1);
 const handleChange = (value: number) => {

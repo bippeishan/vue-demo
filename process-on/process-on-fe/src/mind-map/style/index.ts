@@ -24,6 +24,7 @@ class Style {
   bgColor?: string;
 
   constructor(ctx: any) {
+    // console.log('ctx:', ctx);
     this.ctx = ctx;
   }
 }

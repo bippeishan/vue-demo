@@ -59,6 +59,7 @@ class Render {
     this.setNodeText = this.setNodeText.bind(this);
     this.startTextEdit = this.startTextEdit.bind(this);
     this.endTextEdit = this.endTextEdit.bind(this);
+    this.setNodeStyle = this.setNodeStyle.bind(this);
   }
 
   bindEvent() {
@@ -259,6 +260,12 @@ class Render {
     });
   }
 
+  // 设置节点样式
+  setNodeStyle(data: Record<string, any>) {
+    const node = this.activeNodeList[0];
+    this.setNodeStyleDataRender(node, data);
+  }
+
   insertNodeWrap = () => {
     if (this.textEdit.showTextEdit) {
       return;
@@ -287,6 +294,7 @@ class Render {
     this.mindMap.command.add('INSERT_AFTER', this.insertAfter);
     this.mindMap.command.add('INSERT_BEFORE', this.insertBefore);
     this.mindMap.command.add('SET_NODE_TEXT', this.setNodeText);
+    this.mindMap.command.add('UPDATE_NODE_STYLE', this.setNodeStyle);
   }
 
   // 注册快捷键
@@ -494,6 +502,15 @@ class Render {
     node.renderNode();
     if (changed) {
       this.mindMap.render();
+    }
+  }
+
+  // 设置节点样式数据，并渲染
+  // eslint-disable-next-line class-methods-use-this
+  setNodeStyleDataRender(node: Node, data: Record<string, any>) {
+    if (node) {
+      setNodeData(node, data);
+      node.renderNode();
     }
   }
 }

@@ -156,10 +156,13 @@ class Node {
   createTextNode() {
     const g = new G();
     // 多行文本
+    // console.log('createTextNode:', this.nodeData.data);
     this.nodeData.data.text.split(/\n/gim).forEach((item) => {
       const node = new Text().text(item);
       // 设置字体颜色、字号等TODO: 一级/二级/三级的样式应该不一样
-      styleUtils.text(node);
+      const { fontColor } = this.nodeData.data;
+
+      styleUtils.text(node, { fontColor });
       g.add(node);
     });
 

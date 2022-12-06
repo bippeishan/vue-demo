@@ -13,10 +13,11 @@ const rect = (node: Rect, style?: { fillColor?: string; strokeColor?: string }) 
     .radius(2);
 };
 
-const text = (node: Text) => {
+const text = (node: Text, config?: Record<string, any>) => {
+  // console.log('config:', config);
   node
     .fill({
-      color: '#ffffff',
+      color: config?.fontColor || '#ffffff',
     })
     .font({
       'font-family': '-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,apple color emoji,segoe ui emoji,Segoe UI Symbol,noto color emoji',
