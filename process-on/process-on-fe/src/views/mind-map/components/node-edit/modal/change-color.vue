@@ -6,15 +6,14 @@
 import { ref } from 'vue';
 import colorPicker from '@bipeishan/vue-colorpicker';
 
-// const props = defineProps<{
-//   color: string;
-// }>();
+const props = defineProps<{
+  color: string;
+}>();
 const emit = defineEmits(['onChange']);
 
-const color = ref('#59c7f9');
+const color = ref(props.color);
 const changeColor = (val: any) => {
-  //   const { r, g, b, a } = val.rgba;
-  //   this.color = `rgba(${r}, ${g}, ${b}, ${a})`;
+  color.value = val.hex;
   emit('onChange', val.hex);
 };
 </script>

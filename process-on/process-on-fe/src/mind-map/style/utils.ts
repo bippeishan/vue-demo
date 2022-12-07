@@ -1,27 +1,27 @@
 import { Path, Rect, Text } from '@svgdotjs/svg.js';
 
-const rect = (node: Rect, style?: { fillColor?: string; strokeColor?: string }) => {
+const rect = (node: Rect, style?: { fillColor?: string; strokeColor?: string; borderWidth?: number; borderRadius?: number }) => {
   node
     .fill({
-      color: style?.fillColor || '#ffffff',
+      color: style?.fillColor || '#f4f4f4',
     })
     .stroke({
       color: style?.strokeColor || '#0984e3',
-      width: 1,
+      width: style?.borderWidth || 1,
       dasharray: '0, 0',
     })
-    .radius(2);
+    .radius(style?.borderRadius || 2);
 };
 
 const text = (node: Text, config?: Record<string, any>) => {
   // console.log('config:', config);
   node
     .fill({
-      color: config?.fontColor || '#ffffff',
+      color: config?.fontColor || '#333333',
     })
     .font({
       'font-family': '-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,apple color emoji,segoe ui emoji,Segoe UI Symbol,noto color emoji',
-      'font-size': 12,
+      'font-size': config?.fontSize || 12,
       'line-height': 14,
       'font-weight': 'noraml',
       'font-style': 'normal',
@@ -29,8 +29,8 @@ const text = (node: Text, config?: Record<string, any>) => {
     });
 };
 
-const line = (node: Path, style?: { color?: string }) => {
-  node.stroke({ width: 1, color: style?.color || '#ccc' }).fill('transparent');
+const line = (node: Path, style?: { color?: string; width?: number }) => {
+  node.stroke({ width: style?.width || 1, color: style?.color || '#ccc' }).fill('transparent');
 };
 
 const domText = (node: HTMLDivElement, _fontSizeScale = 1) => {

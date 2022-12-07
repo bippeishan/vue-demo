@@ -160,9 +160,9 @@ class Node {
     this.nodeData.data.text.split(/\n/gim).forEach((item) => {
       const node = new Text().text(item);
       // 设置字体颜色、字号等TODO: 一级/二级/三级的样式应该不一样
-      const { fontColor } = this.nodeData.data;
+      const { fontColor, fontSize } = this.nodeData.data;
 
-      styleUtils.text(node, { fontColor });
+      styleUtils.text(node, { fontColor, fontSize });
       g.add(node);
     });
 
@@ -243,13 +243,19 @@ class Node {
     // console.log('99:', this.nodeData);
     const isActive = !!this.isActive;
 
-    styleUtils.rect(this.group.rect(this.width, this.height), { strokeColor: isActive ? '' : '#ffffff' });
+    styleUtils.rect(this.group.rect(this.width, this.height), { strokeColor: isActive ? '' : '#f4f4f4' });
     // 根节点在页面居中
     this.group.translate(this.left, this.top);
     // 文字节点
     const textContentNested = new G();
     // console.log('11:', this.width, this.height, this.width - contentPadding * 2, this.height - contentPadding * 2);
-    styleUtils.rect(textContentNested.rect(this.width - contentPadding * 2, this.height - contentPadding * 2), { fillColor: '#6c5ce7' });
+    // console.log('node-layout:', this.style, this.nodeData.data.bgColor, this.nodeData.data.borderColor);
+    styleUtils.rect(textContentNested.rect(this.width - contentPadding * 2, this.height - contentPadding * 2), {
+      fillColor: this.nodeData.data.bgColor,
+      strokeColor: this.nodeData.data.borderColor,
+      borderWidth: this.nodeData.data.borderWidth,
+      borderRadius: this.nodeData.data.borderRadius,
+    });
 
     if (this.textData) {
       // 有文字节点
@@ -314,7 +320,7 @@ class Node {
     });
     // 添加样式
     this.lines.forEach((line) => {
-      styleUtils.line(line);
+      styleUtils.line(line, { width: this.nodeData.data.lineWidth, color: this.nodeData.data.lineColor });
     });
   }
 

@@ -46,8 +46,7 @@ const init = async () => {
 
 const handleDataChange = async (data: any) => {
   console.log('data---:', data);
-  const result = await Api.uPut({ Action: `files/${route.params.id}`, id: route.params.id, file_content: JSON.stringify(data) });
-  console.log('result:', result);
+  await Api.uPut({ Action: `files/${route.params.id}`, id: route.params.id, file_content: JSON.stringify(data) });
 };
 
 const execCommand = (...args: any[]) => {
