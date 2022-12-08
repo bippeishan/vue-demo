@@ -142,7 +142,7 @@ class Node {
     this.mindMap.renderer.addActiveNode(this);
 
     this.renderNode();
-    // this.mindMap.emit('node_active', this, this.mindMap.renderer.activeNodeList);
+    this.mindMap.emit('node_active', this, this.mindMap.renderer.activeNodeList?.[0]);
   }
 
   reset() {

@@ -19,7 +19,7 @@
               </span>
             </el-tooltip>
           </template>
-          <StyleEdit />
+          <StyleEdit :activeNode="activeNode" />
         </el-tab-pane>
 
         <el-tab-pane>
@@ -67,11 +67,31 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import StyleEdit from './style-edit.vue';
+import emitter from '../../../../utils/event-bus';
+
+const activeNode = ref();
+
+const handleNodeActive = (_curr: any, active: any) => {
+  activeNode.value = active;
+};
+
+const handleClearNodeActive = () => {
+  activeNode.value = undefined;
+};
+
+onMounted(() => {
+  emitter.on('node_active', handleNodeActive);
+  emitter.on('clear_node_active', handleClearNodeActive);
+});
+
+onUnmounted(() => {
+  emitter.off('node_active', handleNodeActive);
+  emitter.off('clear_node_active', handleClearNodeActive);
+});
 
 const isShow = ref(false);
-
 const show = () => {
   isShow.value = !isShow.value;
 };

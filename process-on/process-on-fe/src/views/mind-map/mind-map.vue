@@ -37,7 +37,7 @@ const init = async () => {
   });
 
   // 转发事件
-  ['node_contextmenu', 'data_change', 'clear_active_node'].forEach((event) => {
+  ['node_contextmenu', 'data_change', 'clear_active_node', 'node_active', 'clear_node_active'].forEach((event) => {
     mindMap.value.on(event, (...args: any[]) => {
       emitter.emit(event, ...args);
     });

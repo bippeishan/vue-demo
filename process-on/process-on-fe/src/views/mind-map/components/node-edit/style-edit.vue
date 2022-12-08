@@ -74,6 +74,10 @@ import IBorderColor from '../../../../icons/i-border-color.vue';
 import ChangeColor from './modal/change-color.vue';
 import emitter from '../../../../utils/event-bus';
 
+const props = defineProps<{
+  activeNode: any;
+}>();
+
 const exec = (key: string, valueObj?: any) => {
   switch (key) {
     case 'UPDATE_NODE_STYLE':
@@ -85,13 +89,13 @@ const exec = (key: string, valueObj?: any) => {
   }
 };
 
-const fontColor = ref('');
+const fontColor = ref(props.activeNode?.nodeData?.data?.fontColor || '#333333');
 const handleFontColorChange = (val: string) => {
   fontColor.value = val;
   exec('UPDATE_NODE_STYLE', { fontColor: val });
 };
 
-const fontNum = ref(1);
+const fontNum = ref(props.activeNode?.nodeData?.data?.fontSize || 12);
 const handleChange = (value: number) => {
   fontNum.value = value;
   exec('UPDATE_NODE_STYLE', { fontSize: value });
@@ -106,13 +110,13 @@ const borderWidthOptions = [
   { label: '5px', value: 5 },
   { label: '6px', value: 6 },
 ];
-const borderWidth = ref(0);
+const borderWidth = ref(props.activeNode?.nodeData?.data?.borderWidth || 0);
 const handleBorderWidthChange = (value: number) => {
   // console.log(value);
   borderWidth.value = value;
   exec('UPDATE_NODE_STYLE', { borderWidth: value });
 };
-const borderColor = ref('');
+const borderColor = ref(props.activeNode?.nodeData?.data?.borderColor || '#cccccc');
 const handleBorderColorChange = (val: string) => {
   borderColor.value = val;
   exec('UPDATE_NODE_STYLE', { borderColor: val });
@@ -125,30 +129,30 @@ const borderStyleOptions = [
   { label: '点线', value: 'dot' },
   { label: '双线', value: 'double' },
 ];
-const borderStyle = ref('');
+const borderStyle = ref(props.activeNode?.nodeData?.data?.borderStyle || 'solid');
 const handleBorderStyleChange = (value: string) => {
   console.log(value);
   borderStyle.value = value;
 };
 
-const borderRadius = ref(0);
+const borderRadius = ref(props.activeNode?.nodeData?.data?.borderRadius || 0);
 const handleBorderRadiusChange = (value: number) => {
   borderRadius.value = value;
   exec('UPDATE_NODE_STYLE', { borderRadius: value });
 };
 
-const lineWidth = ref(1);
+const lineWidth = ref(props.activeNode?.nodeData?.data?.lineWidth || 1);
 const handleLineWidthChange = (value: number) => {
   lineWidth.value = value;
   exec('UPDATE_NODE_STYLE', { lineWidth: value });
 };
-const lineColor = ref('');
+const lineColor = ref(props.activeNode?.nodeData?.data?.lineColor || '#cccccc');
 const handleLineColorChange = (value: string) => {
   lineColor.value = value;
   exec('UPDATE_NODE_STYLE', { lineColor: value });
 };
 
-const bgColor = ref('');
+const bgColor = ref(props.activeNode?.nodeData?.data?.bgColor || '#ffffff');
 const handleBgColorChange = (value: string) => {
   bgColor.value = value;
   exec('UPDATE_NODE_STYLE', { bgColor: value });

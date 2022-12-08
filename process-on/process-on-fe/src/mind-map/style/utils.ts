@@ -8,6 +8,7 @@ const rect = (node: Rect, style?: { fillColor?: string; strokeColor?: string; bo
     .stroke({
       color: style?.strokeColor || '#0984e3',
       width: style?.borderWidth || 1,
+      // width: 0,
       dasharray: '0, 0',
     })
     .radius(style?.borderRadius || 2);

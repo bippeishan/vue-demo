@@ -88,6 +88,7 @@ class Render {
       item.renderNode();
     });
     this.activeNodeList = [];
+    this.mindMap.emit('clear_node_active');
   }
 
   // 插入子节点
