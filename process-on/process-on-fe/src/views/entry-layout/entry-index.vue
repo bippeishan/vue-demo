@@ -2,49 +2,18 @@
   <div class="entry-layout">
     <el-container>
       <el-header>
-        <div>云办公</div>
+        <div>Good云办公</div>
         <div></div>
         <div>emma.bi</div>
       </el-header>
       <el-container class="entry-layout-content">
-        <el-aside width="200px">
-          <el-dropdown trigger="click">
-            <el-button type="primary">新建</el-button>
-            <template #dropdown>
-              <el-dropdown-menu>
-                <el-dropdown-item @click="handleEditFolder">文件夹</el-dropdown-item>
-                <el-dropdown-item>思维导图</el-dropdown-item>
-              </el-dropdown-menu>
-            </template>
-          </el-dropdown>
-
-          <div class="menu-content">
-            <div class="menu-item menu-item-active">
-              <el-icon :size="18">
-                <Files />
-              </el-icon>
-              <span class="menu-item-label">我的文件</span>
-            </div>
-
-            <div class="menu-item">
-              <el-icon :size="18"><DeleteFilled /></el-icon>
-              <span class="menu-item-label">回收站</span>
-            </div>
-          </div>
-        </el-aside>
         <el-main><router-view /></el-main>
       </el-container>
     </el-container>
   </div>
 </template>
 
-<script setup lang="ts">
-import emitter from '../../utils/event-bus';
-
-const handleEditFolder = () => {
-  emitter.emit('create_folder');
-};
-</script>
+<script setup lang="ts"></script>
 
 <style lang="less" scoped>
 .entry-layout {
@@ -57,43 +26,6 @@ const handleEditFolder = () => {
 
   .entry-layout-content {
     padding: 24px;
-  }
-
-  .menu-content {
-    margin-top: 24px;
-
-    .menu-item {
-      display: flex;
-      align-items: center;
-      margin-bottom: 24px;
-
-      i {
-        margin-right: 12px;
-        color: #747d8c;
-      }
-
-      &-label {
-        color: #747d8c;
-      }
-    }
-
-    .menu-item-active {
-      i {
-        color: #0984e3;
-      }
-
-      .menu-item-label {
-        color: #0984e3;
-      }
-    }
-  }
-}
-</style>
-
-<style lang="less">
-.el-dropdown__popper {
-  .el-popper__arrow {
-    display: none;
   }
 }
 </style>

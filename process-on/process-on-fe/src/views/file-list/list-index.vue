@@ -80,7 +80,7 @@ const handleFolderClick = (info: any) => {
 
     getFiles({ parent_id: info.id });
   } else {
-    router.push(`/${info.type}/${info.id}`);
+    router.push(`/file-system/${info.type}/${info.id}`);
   }
 };
 

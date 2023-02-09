@@ -6,13 +6,24 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import(/* webpackChunkName: "entryLayout" */ '../views/entry-layout/entry-index.vue'),
     children: [
       {
-        path: 'files',
-        component: () => import(/* webpackChunkName: "fileList" */ '../views/file-list/list-index.vue'),
+        path: '/file-system',
+        component: () => import(/* webpackChunkName: "filesEntryLayout" */ '../views/files-entry-layout/entry-index.vue'),
+        children: [
+          {
+            path: 'files',
+            component: () => import(/* webpackChunkName: "fileList" */ '../views/file-list/list-index.vue'),
+          },
+        ],
+      },
+      {
+        path: '/upro',
+        component: () => import(/* webpackChunkName: "uproEntryLayout" */ '../views/upro/entry-layout/entry-index.vue'),
+        children: [],
       },
     ],
   },
   {
-    path: '/mindmap/:id',
+    path: '/file-system/mindmap/:id',
     name: 'mindmap',
     component: () => import(/* webpackChunkName: "mindmap" */ '../views/mind-map/mind-map.vue'),
   },
