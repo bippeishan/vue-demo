@@ -18,7 +18,12 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: '/upro',
         component: () => import(/* webpackChunkName: "uproEntryLayout" */ '../views/upro/entry-layout/entry-index.vue'),
-        children: [],
+        children: [
+          {
+            path: 'projects',
+            component: () => import(/* webpackChunkName: "uproProjects" */ '../views/upro/project-list/project-list.vue'),
+          },
+        ],
       },
     ],
   },

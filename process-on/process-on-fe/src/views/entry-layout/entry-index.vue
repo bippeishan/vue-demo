@@ -6,7 +6,7 @@
         <div></div>
         <div>emma.bi</div>
       </el-header>
-      <el-container class="entry-layout-content">
+      <el-container>
         <el-main><router-view /></el-main>
       </el-container>
     </el-container>
@@ -22,10 +22,6 @@
     justify-content: space-between;
     align-items: center;
     background: #ffffff;
-  }
-
-  .entry-layout-content {
-    padding: 24px;
   }
 }
 </style>
