@@ -6,22 +6,27 @@
           <el-icon :size="18">
             <Files />
           </el-icon>
-          <span class="menu-item-label">项目</span>
+          <router-link to="projects" class="menu-item-label">项目</router-link>
         </div>
 
         <div class="menu-item">
           <el-icon :size="18"><DeleteFilled /></el-icon>
-          <span class="menu-item-label">迭代</span>
+          <router-link to="projects" class="menu-item-label">迭代</router-link>
         </div>
 
         <div class="menu-item">
           <el-icon :size="18"><DeleteFilled /></el-icon>
-          <span class="menu-item-label">需求</span>
+          <router-link to="projects" class="menu-item-label">需求</router-link>
         </div>
 
         <div class="menu-item">
           <el-icon :size="18"><DeleteFilled /></el-icon>
-          <span class="menu-item-label">Bug</span>
+          <router-link to="projects" class="menu-item-label">Bug</router-link>
+        </div>
+
+        <div class="menu-item">
+          <el-icon :size="18"><DeleteFilled /></el-icon>
+          <router-link to="users" class="menu-item-label">用户管理</router-link>
         </div>
       </div>
     </el-aside>
