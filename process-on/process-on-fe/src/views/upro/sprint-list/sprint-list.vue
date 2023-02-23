@@ -1,7 +1,7 @@
 <template>
   <el-row className="table_header">
     <el-col :span="12">
-      <el-button type="primary" @click="handleCreate()">创建用户</el-button>
+      <el-button type="primary" @click="handleCreate()">创建迭代</el-button>
     </el-col>
     <!-- <el-col :span="12"></el-col> -->
   </el-row>
@@ -13,7 +13,7 @@
       <template #default="scope">
         <el-button size="small" @click="handleEdit(scope.row)">Edit</el-button>
 
-        <el-popconfirm title="确认删除这个用户吗?" @confirm="handleDelete(scope.row)">
+        <el-popconfirm title="确认删除这个迭代吗?" @confirm="handleDelete(scope.row)">
           <template #reference>
             <el-button size="small" type="danger">Delete</el-button>
           </template>
@@ -28,14 +28,14 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import Api from '../../../service/api';
-import { UserInfo } from './type';
+import { SprintInfo } from './type';
 
-const infos = ref<UserInfo[]>([]);
+const infos = ref<SprintInfo[]>([]);
 const editVisible = ref(false);
-const editInfo = ref<UserInfo>();
+const editInfo = ref<SprintInfo>();
 
 const getInfos = async (params: any) => {
-  const list = await Api.uGet({ Action: 'users', ...params });
+  const list = await Api.uGet({ Action: 'sprints', ...params });
   infos.value = list;
 };
 
@@ -47,14 +47,14 @@ const handleCreate = () => {
   editVisible.value = !editVisible.value;
 };
 
-const handleEdit = (record: UserInfo) => {
+const handleEdit = (record: SprintInfo) => {
   editVisible.value = !editVisible.value;
   editInfo.value = record;
 };
 
-const handleDelete = (record: UserInfo) => {
+const handleDelete = (record: SprintInfo) => {
   console.log('handleDelete:', record);
-  Api.uDelete({ Action: `users/${record.id}` }).then(() => {
+  Api.uDelete({ Action: `sprints/${record.id}` }).then(() => {
     getInfos({});
   });
 };

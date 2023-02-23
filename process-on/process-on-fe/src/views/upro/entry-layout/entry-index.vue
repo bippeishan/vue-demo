@@ -6,27 +6,27 @@
           <el-icon :size="18">
             <Files />
           </el-icon>
-          <router-link to="projects" class="menu-item-label">项目</router-link>
+          <router-link to="/upro/projects" class="menu-item-label">项目</router-link>
         </div>
 
         <div class="menu-item">
           <el-icon :size="18"><DeleteFilled /></el-icon>
-          <router-link to="projects" class="menu-item-label">迭代</router-link>
+          <router-link to="/upro/sprints" class="menu-item-label">迭代</router-link>
         </div>
 
         <div class="menu-item">
           <el-icon :size="18"><DeleteFilled /></el-icon>
-          <router-link to="projects" class="menu-item-label">需求</router-link>
+          <router-link to="/upro/tasks" class="menu-item-label">需求</router-link>
         </div>
 
         <div class="menu-item">
           <el-icon :size="18"><DeleteFilled /></el-icon>
-          <router-link to="projects" class="menu-item-label">Bug</router-link>
+          <router-link to="/upro/bugs" class="menu-item-label">Bug</router-link>
         </div>
 
         <div class="menu-item">
           <el-icon :size="18"><DeleteFilled /></el-icon>
-          <router-link to="users" class="menu-item-label">用户管理</router-link>
+          <router-link to="/upro/users" class="menu-item-label">用户管理</router-link>
         </div>
       </div>
     </el-aside>

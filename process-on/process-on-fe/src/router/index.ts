@@ -27,6 +27,18 @@ const routes: Array<RouteRecordRaw> = [
             path: 'users',
             component: () => import(/* webpackChunkName: "uproUsers" */ '../views/upro/user-list/user-list.vue'),
           },
+          {
+            path: 'sprints',
+            component: () => import(/* webpackChunkName: "uproSprints" */ '../views/upro/sprint-list/sprint-list.vue'),
+          },
+          {
+            path: 'tasks',
+            component: () => import(/* webpackChunkName: "uproTasks" */ '../views/upro/task-list/task-list.vue'),
+          },
+          {
+            path: 'bugs',
+            component: () => import(/* webpackChunkName: "uproBugs" */ '../views/upro/bug-list/bug-list.vue'),
+          },
         ],
       },
     ],
